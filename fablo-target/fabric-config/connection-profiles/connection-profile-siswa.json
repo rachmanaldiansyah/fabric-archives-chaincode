@@ -1,0 +1,53 @@
+{
+  "name": "fablo-test-network-siswa",
+  "description": "Connection profile for Siswa in Fablo network",
+  "version": "1.0.0",
+  "client": {
+    "organization": "Siswa"
+  },
+  "organizations": {
+    "Siswa": {
+      "mspid": "SiswaMSP",
+      "peers": [
+        "peer0.kepsek.maarif.ac.id",
+        "peer1.kepsek.maarif.ac.id",
+        "peer0.kesiswaan.maarif.ac.id",
+        "peer0.stafftu.maarif.ac.id",
+        "peer0.mitra.maarif.ac.id",
+        "peer0.siswa.maarif.ac.id"
+      ],
+      "certificateAuthorities": [
+        "ca.siswa.maarif.ac.id"
+      ]
+    }
+  },
+  "peers": {
+    "peer0.kepsek.maarif.ac.id": {
+      "url": "grpc://localhost:7041"
+    },
+    "peer1.kepsek.maarif.ac.id": {
+      "url": "grpc://localhost:7042"
+    },
+    "peer0.kesiswaan.maarif.ac.id": {
+      "url": "grpc://localhost:7061"
+    },
+    "peer0.stafftu.maarif.ac.id": {
+      "url": "grpc://localhost:7081"
+    },
+    "peer0.mitra.maarif.ac.id": {
+      "url": "grpc://localhost:7101"
+    },
+    "peer0.siswa.maarif.ac.id": {
+      "url": "grpc://localhost:7121"
+    }
+  },
+  "certificateAuthorities": {
+    "ca.siswa.maarif.ac.id": {
+      "url": "http://localhost:7120",
+      "caName": "ca.siswa.maarif.ac.id",
+      "httpOptions": {
+        "verify": false
+      }
+    }
+  }
+}

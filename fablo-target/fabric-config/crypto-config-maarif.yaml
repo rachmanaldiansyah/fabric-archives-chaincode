@@ -1,0 +1,9 @@
+PeerOrgs:
+  - Name: Maarif
+    Domain: maarif.orderer.ac.id
+    Specs:
+      - Hostname: orderer0.maarif
+    Template:
+      Count: 0
+    Users:
+      Count: 1

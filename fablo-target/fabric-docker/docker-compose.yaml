@@ -1,0 +1,665 @@
+version: '2.2'
+
+networks:
+  basic:
+
+services:
+
+  ca.maarif.orderer.ac.id:
+    container_name: ca.maarif.orderer.ac.id
+    image: hyperledger/fabric-ca:${FABRIC_CA_VERSION}
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.maarif.orderer.ac.id
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server/crypto/ca.maarif.orderer.ac.id-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server/crypto/priv-key.pem
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+    ports:
+      - 7020:7054
+    working_dir: /etc/hyperledger/fabric-ca-server
+    command: sh -c 'fabric-ca-server start -b ${MAARIF_CA_ADMIN_NAME}:${MAARIF_CA_ADMIN_PASSWORD} -d'
+    volumes:
+      - ../fabric-config/crypto-config/peerOrganizations/maarif.orderer.ac.id/ca/:/etc/hyperledger/fabric-ca-server/crypto
+      - ../fabric-config/fabric-ca-server-config/maarif.orderer.ac.id/fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml
+    networks:
+      - basic
+
+  cli.maarif.orderer.ac.id:
+    container_name: cli.maarif.orderer.ac.id
+    image: hyperledger/fabric-tools:${FABRIC_VERSION}
+    tty: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+      - CORE_PEER_ID=cli.maarif.orderer.ac.id
+      - CORE_CHAINCODE_KEEPALIVE=10
+      #
+      - CORE_PEER_LOCALMSPID=MaarifMSP
+      - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/cli/crypto/users/Admin@maarif.orderer.ac.id/msp
+    working_dir: /var/hyperledger/cli/
+    command: /bin/bash
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - ../fabric-docker/scripts/cli:/var/hyperledger/cli/scripts/
+      - ../fabric-config/config:/var/hyperledger/cli/config/ # genesis.block and channel.tx's
+      - ../fabric-config/crypto-config/peerOrganizations/maarif.orderer.ac.id:/var/hyperledger/cli/crypto/
+      - ../fabric-config/chaincode-packages:/var/hyperledger/cli/chaincode-packages/
+      - "$CHAINCODES_BASE_DIR/./chaincodes/chaincode-ijazah/:/var/hyperledger/cli/chaincode-ijazah/"
+      - "$CHAINCODES_BASE_DIR/./chaincodes/chaincode-sertifikat/:/var/hyperledger/cli/chaincode-sertifikat/"
+    networks:
+      - basic
+
+  fablo-rest.maarif.orderer.ac.id:
+    container_name: fablo-rest.maarif.orderer.ac.id
+    image: fakhrads/fablo-rest:${FABLO_REST_VERSION}
+    environment:
+      - PORT=8000
+      - MSP_ID=MaarifMSP
+      - FABRIC_CA_URL=http://ca.maarif.orderer.ac.id:7054
+      - FABRIC_CA_NAME=ca.maarif.orderer.ac.id
+      - AS_LOCALHOST=false
+      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101,grpc://peer0.siswa.maarif.ac.id:7121
+      - HFC_LOGGING={"error":"console","warn":"console","info":"console"}
+    ports:
+      - 8800:8000
+    networks:
+      - basic
+
+  orderer0.maarif.maarif.orderer.ac.id:
+    container_name: orderer0.maarif.maarif.orderer.ac.id
+    image: hyperledger/fabric-orderer:${FABRIC_VERSION}
+    environment:
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7030
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_BOOTSTRAPFILE=/var/hyperledger/config/MaarifGenesis.block
+      - ORDERER_GENERAL_LOCALMSPID=MaarifMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      - GODEBUG=netdns=go
+    working_dir: /var/hyperledger/orderer
+    command: orderer
+    ports:
+      - 7030:7030
+      - 8030:9440
+    volumes:
+      - ../fabric-config/config/:/var/hyperledger/config
+      - ../fabric-config/crypto-config/peerOrganizations/maarif.orderer.ac.id/peers/orderer0.maarif.maarif.orderer.ac.id/msp/:/var/hyperledger/orderer/msp
+      - ../fabric-config/crypto-config/peerOrganizations/maarif.orderer.ac.id/peers/orderer0.maarif.maarif.orderer.ac.id/tls/:/var/hyperledger/orderer/tls
+    networks:
+      - basic
+
+  ca.kepsek.maarif.ac.id:
+    container_name: ca.kepsek.maarif.ac.id
+    image: hyperledger/fabric-ca:${FABRIC_CA_VERSION}
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.kepsek.maarif.ac.id
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server/crypto/ca.kepsek.maarif.ac.id-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server/crypto/priv-key.pem
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+    ports:
+      - 7040:7054
+    working_dir: /etc/hyperledger/fabric-ca-server
+    command: sh -c 'fabric-ca-server start -b ${KEPALASEKOLAH_CA_ADMIN_NAME}:${KEPALASEKOLAH_CA_ADMIN_PASSWORD} -d'
+    volumes:
+      - ../fabric-config/crypto-config/peerOrganizations/kepsek.maarif.ac.id/ca/:/etc/hyperledger/fabric-ca-server/crypto
+      - ../fabric-config/fabric-ca-server-config/kepsek.maarif.ac.id/fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml
+    networks:
+      - basic
+
+  cli.kepsek.maarif.ac.id:
+    container_name: cli.kepsek.maarif.ac.id
+    image: hyperledger/fabric-tools:${FABRIC_VERSION}
+    tty: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+      - CORE_PEER_ID=cli.kepsek.maarif.ac.id
+      - CORE_CHAINCODE_KEEPALIVE=10
+      #
+      - CORE_PEER_LOCALMSPID=KepalaSekolahMSP
+      - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/cli/crypto/users/Admin@kepsek.maarif.ac.id/msp
+      - CORE_PEER_ADDRESS=peer0.kepsek.maarif.ac.id:7041
+    working_dir: /var/hyperledger/cli/
+    command: /bin/bash
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - ../fabric-docker/scripts/cli:/var/hyperledger/cli/scripts/
+      - ../fabric-config/config:/var/hyperledger/cli/config/ # genesis.block and channel.tx's
+      - ../fabric-config/crypto-config/peerOrganizations/kepsek.maarif.ac.id:/var/hyperledger/cli/crypto/
+      - ../fabric-config/chaincode-packages:/var/hyperledger/cli/chaincode-packages/
+      - "$CHAINCODES_BASE_DIR/./chaincodes/chaincode-ijazah/:/var/hyperledger/cli/chaincode-ijazah/"
+      - "$CHAINCODES_BASE_DIR/./chaincodes/chaincode-sertifikat/:/var/hyperledger/cli/chaincode-sertifikat/"
+    networks:
+      - basic
+
+  fablo-rest.kepsek.maarif.ac.id:
+    container_name: fablo-rest.kepsek.maarif.ac.id
+    image: fakhrads/fablo-rest:${FABLO_REST_VERSION}
+    environment:
+      - PORT=8000
+      - MSP_ID=KepalaSekolahMSP
+      - FABRIC_CA_URL=http://ca.kepsek.maarif.ac.id:7054
+      - FABRIC_CA_NAME=ca.kepsek.maarif.ac.id
+      - AS_LOCALHOST=false
+      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101,grpc://peer0.siswa.maarif.ac.id:7121
+      - HFC_LOGGING={"error":"console","warn":"console","info":"console"}
+    ports:
+      - 8801:8000
+    networks:
+      - basic
+
+  peer0.kepsek.maarif.ac.id:
+    container_name: peer0.kepsek.maarif.ac.id
+    image: hyperledger/fabric-peer:${FABRIC_VERSION}
+    environment:
+      - CORE_PEER_LOCALMSPID=KepalaSekolahMSP
+      - CORE_PEER_ID=peer0.kepsek.maarif.ac.id
+      - CORE_PEER_ADDRESS=peer0.kepsek.maarif.ac.id:7041
+      - CORE_PEER_LISTENADDRESS=peer0.kepsek.maarif.ac.id:7041
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.kepsek.maarif.ac.id:7041
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.kepsek.maarif.ac.id:7041
+      - CORE_PEER_GOSSIP_BOOTSTRAP="peer0.kepsek.maarif.ac.id:7041 peer1.kepsek.maarif.ac.id:7042"
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.kepsek.maarif.ac.id:7050
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/peer/msp
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:${FABRIC_CCENV_VERSION}
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:${FABRIC_BASEOS_VERSION}
+      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:${FABRIC_JAVAENV_VERSION}
+      #
+      - CORE_CHAINCODE_LOGGING_LEVEL=${LOGGING_LEVEL}
+      - CORE_CHAINCODE_LOGGING_SHIM=${LOGGING_LEVEL}
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+      # metrics
+      - CORE_OPERATIONS_LISTENADDRESS=peer0.kepsek.maarif.ac.id:9440
+      - CORE_METRICS_PROVIDER=prometheus
+      #
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_basic
+      - CORE_VM_DOCKER_ATTACHSTDOUT=true
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - GODEBUG=netdns=go
+      # enabled gateway
+      - CORE_PEER_GATEWAY_ENABLED=true
+    working_dir: /etc/hyperledger/fabric/peer/
+    command: peer node start
+    ports:
+      - 8041:9440
+      - 7041:7041
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - ../fabric-config/crypto-config/peerOrganizations/kepsek.maarif.ac.id/peers/peer0.kepsek.maarif.ac.id/msp:/etc/hyperledger/fabric/peer/msp
+      - ../fabric-config/crypto-config/peerOrganizations/kepsek.maarif.ac.id/peers/peer0.kepsek.maarif.ac.id/tls:/etc/hyperledger/fabric/peer/tls
+      - ../fabric-config/crypto-config/peerOrganizations/kepsek.maarif.ac.id/users:/etc/hyperledger/fabric/peer/msp/users
+      - ../fabric-config/config:/etc/hyperledger/fabric/config
+    networks:
+      - basic
+
+  peer1.kepsek.maarif.ac.id:
+    container_name: peer1.kepsek.maarif.ac.id
+    image: hyperledger/fabric-peer:${FABRIC_VERSION}
+    environment:
+      - CORE_PEER_LOCALMSPID=KepalaSekolahMSP
+      - CORE_PEER_ID=peer1.kepsek.maarif.ac.id
+      - CORE_PEER_ADDRESS=peer1.kepsek.maarif.ac.id:7042
+      - CORE_PEER_LISTENADDRESS=peer1.kepsek.maarif.ac.id:7042
+      - CORE_PEER_GOSSIP_ENDPOINT=peer1.kepsek.maarif.ac.id:7042
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.kepsek.maarif.ac.id:7042
+      - CORE_PEER_GOSSIP_BOOTSTRAP="peer0.kepsek.maarif.ac.id:7041 peer1.kepsek.maarif.ac.id:7042"
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer1.kepsek.maarif.ac.id:7050
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/peer/msp
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:${FABRIC_CCENV_VERSION}
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:${FABRIC_BASEOS_VERSION}
+      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:${FABRIC_JAVAENV_VERSION}
+      #
+      - CORE_CHAINCODE_LOGGING_LEVEL=${LOGGING_LEVEL}
+      - CORE_CHAINCODE_LOGGING_SHIM=${LOGGING_LEVEL}
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+      # metrics
+      - CORE_OPERATIONS_LISTENADDRESS=peer1.kepsek.maarif.ac.id:9440
+      - CORE_METRICS_PROVIDER=prometheus
+      #
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_basic
+      - CORE_VM_DOCKER_ATTACHSTDOUT=true
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - GODEBUG=netdns=go
+      # enabled gateway
+      - CORE_PEER_GATEWAY_ENABLED=true
+    working_dir: /etc/hyperledger/fabric/peer/
+    command: peer node start
+    ports:
+      - 8042:9440
+      - 7042:7042
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - ../fabric-config/crypto-config/peerOrganizations/kepsek.maarif.ac.id/peers/peer1.kepsek.maarif.ac.id/msp:/etc/hyperledger/fabric/peer/msp
+      - ../fabric-config/crypto-config/peerOrganizations/kepsek.maarif.ac.id/peers/peer1.kepsek.maarif.ac.id/tls:/etc/hyperledger/fabric/peer/tls
+      - ../fabric-config/crypto-config/peerOrganizations/kepsek.maarif.ac.id/users:/etc/hyperledger/fabric/peer/msp/users
+      - ../fabric-config/config:/etc/hyperledger/fabric/config
+    networks:
+      - basic
+
+  ca.kesiswaan.maarif.ac.id:
+    container_name: ca.kesiswaan.maarif.ac.id
+    image: hyperledger/fabric-ca:${FABRIC_CA_VERSION}
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.kesiswaan.maarif.ac.id
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server/crypto/ca.kesiswaan.maarif.ac.id-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server/crypto/priv-key.pem
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+    ports:
+      - 7060:7054
+    working_dir: /etc/hyperledger/fabric-ca-server
+    command: sh -c 'fabric-ca-server start -b ${KESISWAAN_CA_ADMIN_NAME}:${KESISWAAN_CA_ADMIN_PASSWORD} -d'
+    volumes:
+      - ../fabric-config/crypto-config/peerOrganizations/kesiswaan.maarif.ac.id/ca/:/etc/hyperledger/fabric-ca-server/crypto
+      - ../fabric-config/fabric-ca-server-config/kesiswaan.maarif.ac.id/fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml
+    networks:
+      - basic
+
+  cli.kesiswaan.maarif.ac.id:
+    container_name: cli.kesiswaan.maarif.ac.id
+    image: hyperledger/fabric-tools:${FABRIC_VERSION}
+    tty: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+      - CORE_PEER_ID=cli.kesiswaan.maarif.ac.id
+      - CORE_CHAINCODE_KEEPALIVE=10
+      #
+      - CORE_PEER_LOCALMSPID=KesiswaanMSP
+      - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/cli/crypto/users/Admin@kesiswaan.maarif.ac.id/msp
+      - CORE_PEER_ADDRESS=peer0.kesiswaan.maarif.ac.id:7061
+    working_dir: /var/hyperledger/cli/
+    command: /bin/bash
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - ../fabric-docker/scripts/cli:/var/hyperledger/cli/scripts/
+      - ../fabric-config/config:/var/hyperledger/cli/config/ # genesis.block and channel.tx's
+      - ../fabric-config/crypto-config/peerOrganizations/kesiswaan.maarif.ac.id:/var/hyperledger/cli/crypto/
+      - ../fabric-config/chaincode-packages:/var/hyperledger/cli/chaincode-packages/
+      - "$CHAINCODES_BASE_DIR/./chaincodes/chaincode-ijazah/:/var/hyperledger/cli/chaincode-ijazah/"
+      - "$CHAINCODES_BASE_DIR/./chaincodes/chaincode-sertifikat/:/var/hyperledger/cli/chaincode-sertifikat/"
+    networks:
+      - basic
+
+  fablo-rest.kesiswaan.maarif.ac.id:
+    container_name: fablo-rest.kesiswaan.maarif.ac.id
+    image: fakhrads/fablo-rest:${FABLO_REST_VERSION}
+    environment:
+      - PORT=8000
+      - MSP_ID=KesiswaanMSP
+      - FABRIC_CA_URL=http://ca.kesiswaan.maarif.ac.id:7054
+      - FABRIC_CA_NAME=ca.kesiswaan.maarif.ac.id
+      - AS_LOCALHOST=false
+      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101,grpc://peer0.siswa.maarif.ac.id:7121
+      - HFC_LOGGING={"error":"console","warn":"console","info":"console"}
+    ports:
+      - 8802:8000
+    networks:
+      - basic
+
+  peer0.kesiswaan.maarif.ac.id:
+    container_name: peer0.kesiswaan.maarif.ac.id
+    image: hyperledger/fabric-peer:${FABRIC_VERSION}
+    environment:
+      - CORE_PEER_LOCALMSPID=KesiswaanMSP
+      - CORE_PEER_ID=peer0.kesiswaan.maarif.ac.id
+      - CORE_PEER_ADDRESS=peer0.kesiswaan.maarif.ac.id:7061
+      - CORE_PEER_LISTENADDRESS=peer0.kesiswaan.maarif.ac.id:7061
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.kesiswaan.maarif.ac.id:7061
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.kesiswaan.maarif.ac.id:7061
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.kesiswaan.maarif.ac.id:7061
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.kesiswaan.maarif.ac.id:7050
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/peer/msp
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:${FABRIC_CCENV_VERSION}
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:${FABRIC_BASEOS_VERSION}
+      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:${FABRIC_JAVAENV_VERSION}
+      #
+      - CORE_CHAINCODE_LOGGING_LEVEL=${LOGGING_LEVEL}
+      - CORE_CHAINCODE_LOGGING_SHIM=${LOGGING_LEVEL}
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+      # metrics
+      - CORE_OPERATIONS_LISTENADDRESS=peer0.kesiswaan.maarif.ac.id:9440
+      - CORE_METRICS_PROVIDER=prometheus
+      #
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_basic
+      - CORE_VM_DOCKER_ATTACHSTDOUT=true
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - GODEBUG=netdns=go
+      # enabled gateway
+      - CORE_PEER_GATEWAY_ENABLED=true
+    working_dir: /etc/hyperledger/fabric/peer/
+    command: peer node start
+    ports:
+      - 8061:9440
+      - 7061:7061
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - ../fabric-config/crypto-config/peerOrganizations/kesiswaan.maarif.ac.id/peers/peer0.kesiswaan.maarif.ac.id/msp:/etc/hyperledger/fabric/peer/msp
+      - ../fabric-config/crypto-config/peerOrganizations/kesiswaan.maarif.ac.id/peers/peer0.kesiswaan.maarif.ac.id/tls:/etc/hyperledger/fabric/peer/tls
+      - ../fabric-config/crypto-config/peerOrganizations/kesiswaan.maarif.ac.id/users:/etc/hyperledger/fabric/peer/msp/users
+      - ../fabric-config/config:/etc/hyperledger/fabric/config
+    networks:
+      - basic
+
+  ca.stafftu.maarif.ac.id:
+    container_name: ca.stafftu.maarif.ac.id
+    image: hyperledger/fabric-ca:${FABRIC_CA_VERSION}
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.stafftu.maarif.ac.id
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server/crypto/ca.stafftu.maarif.ac.id-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server/crypto/priv-key.pem
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+    ports:
+      - 7080:7054
+    working_dir: /etc/hyperledger/fabric-ca-server
+    command: sh -c 'fabric-ca-server start -b ${STAFFTU_CA_ADMIN_NAME}:${STAFFTU_CA_ADMIN_PASSWORD} -d'
+    volumes:
+      - ../fabric-config/crypto-config/peerOrganizations/stafftu.maarif.ac.id/ca/:/etc/hyperledger/fabric-ca-server/crypto
+      - ../fabric-config/fabric-ca-server-config/stafftu.maarif.ac.id/fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml
+    networks:
+      - basic
+
+  cli.stafftu.maarif.ac.id:
+    container_name: cli.stafftu.maarif.ac.id
+    image: hyperledger/fabric-tools:${FABRIC_VERSION}
+    tty: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+      - CORE_PEER_ID=cli.stafftu.maarif.ac.id
+      - CORE_CHAINCODE_KEEPALIVE=10
+      #
+      - CORE_PEER_LOCALMSPID=StafftuMSP
+      - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/cli/crypto/users/Admin@stafftu.maarif.ac.id/msp
+      - CORE_PEER_ADDRESS=peer0.stafftu.maarif.ac.id:7081
+    working_dir: /var/hyperledger/cli/
+    command: /bin/bash
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - ../fabric-docker/scripts/cli:/var/hyperledger/cli/scripts/
+      - ../fabric-config/config:/var/hyperledger/cli/config/ # genesis.block and channel.tx's
+      - ../fabric-config/crypto-config/peerOrganizations/stafftu.maarif.ac.id:/var/hyperledger/cli/crypto/
+      - ../fabric-config/chaincode-packages:/var/hyperledger/cli/chaincode-packages/
+      - "$CHAINCODES_BASE_DIR/./chaincodes/chaincode-ijazah/:/var/hyperledger/cli/chaincode-ijazah/"
+      - "$CHAINCODES_BASE_DIR/./chaincodes/chaincode-sertifikat/:/var/hyperledger/cli/chaincode-sertifikat/"
+    networks:
+      - basic
+
+  fablo-rest.stafftu.maarif.ac.id:
+    container_name: fablo-rest.stafftu.maarif.ac.id
+    image: fakhrads/fablo-rest:${FABLO_REST_VERSION}
+    environment:
+      - PORT=8000
+      - MSP_ID=StafftuMSP
+      - FABRIC_CA_URL=http://ca.stafftu.maarif.ac.id:7054
+      - FABRIC_CA_NAME=ca.stafftu.maarif.ac.id
+      - AS_LOCALHOST=false
+      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101,grpc://peer0.siswa.maarif.ac.id:7121
+      - HFC_LOGGING={"error":"console","warn":"console","info":"console"}
+    ports:
+      - 8803:8000
+    networks:
+      - basic
+
+  peer0.stafftu.maarif.ac.id:
+    container_name: peer0.stafftu.maarif.ac.id
+    image: hyperledger/fabric-peer:${FABRIC_VERSION}
+    environment:
+      - CORE_PEER_LOCALMSPID=StafftuMSP
+      - CORE_PEER_ID=peer0.stafftu.maarif.ac.id
+      - CORE_PEER_ADDRESS=peer0.stafftu.maarif.ac.id:7081
+      - CORE_PEER_LISTENADDRESS=peer0.stafftu.maarif.ac.id:7081
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.stafftu.maarif.ac.id:7081
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.stafftu.maarif.ac.id:7081
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.stafftu.maarif.ac.id:7081
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.stafftu.maarif.ac.id:7050
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/peer/msp
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:${FABRIC_CCENV_VERSION}
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:${FABRIC_BASEOS_VERSION}
+      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:${FABRIC_JAVAENV_VERSION}
+      #
+      - CORE_CHAINCODE_LOGGING_LEVEL=${LOGGING_LEVEL}
+      - CORE_CHAINCODE_LOGGING_SHIM=${LOGGING_LEVEL}
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+      # metrics
+      - CORE_OPERATIONS_LISTENADDRESS=peer0.stafftu.maarif.ac.id:9440
+      - CORE_METRICS_PROVIDER=prometheus
+      #
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_basic
+      - CORE_VM_DOCKER_ATTACHSTDOUT=true
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - GODEBUG=netdns=go
+      # enabled gateway
+      - CORE_PEER_GATEWAY_ENABLED=true
+    working_dir: /etc/hyperledger/fabric/peer/
+    command: peer node start
+    ports:
+      - 8081:9440
+      - 7081:7081
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - ../fabric-config/crypto-config/peerOrganizations/stafftu.maarif.ac.id/peers/peer0.stafftu.maarif.ac.id/msp:/etc/hyperledger/fabric/peer/msp
+      - ../fabric-config/crypto-config/peerOrganizations/stafftu.maarif.ac.id/peers/peer0.stafftu.maarif.ac.id/tls:/etc/hyperledger/fabric/peer/tls
+      - ../fabric-config/crypto-config/peerOrganizations/stafftu.maarif.ac.id/users:/etc/hyperledger/fabric/peer/msp/users
+      - ../fabric-config/config:/etc/hyperledger/fabric/config
+    networks:
+      - basic
+
+  ca.mitra.maarif.ac.id:
+    container_name: ca.mitra.maarif.ac.id
+    image: hyperledger/fabric-ca:${FABRIC_CA_VERSION}
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.mitra.maarif.ac.id
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server/crypto/ca.mitra.maarif.ac.id-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server/crypto/priv-key.pem
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+    ports:
+      - 7100:7054
+    working_dir: /etc/hyperledger/fabric-ca-server
+    command: sh -c 'fabric-ca-server start -b ${MITRA_CA_ADMIN_NAME}:${MITRA_CA_ADMIN_PASSWORD} -d'
+    volumes:
+      - ../fabric-config/crypto-config/peerOrganizations/mitra.maarif.ac.id/ca/:/etc/hyperledger/fabric-ca-server/crypto
+      - ../fabric-config/fabric-ca-server-config/mitra.maarif.ac.id/fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml
+    networks:
+      - basic
+
+  cli.mitra.maarif.ac.id:
+    container_name: cli.mitra.maarif.ac.id
+    image: hyperledger/fabric-tools:${FABRIC_VERSION}
+    tty: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+      - CORE_PEER_ID=cli.mitra.maarif.ac.id
+      - CORE_CHAINCODE_KEEPALIVE=10
+      #
+      - CORE_PEER_LOCALMSPID=MitraMSP
+      - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/cli/crypto/users/Admin@mitra.maarif.ac.id/msp
+      - CORE_PEER_ADDRESS=peer0.mitra.maarif.ac.id:7101
+    working_dir: /var/hyperledger/cli/
+    command: /bin/bash
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - ../fabric-docker/scripts/cli:/var/hyperledger/cli/scripts/
+      - ../fabric-config/config:/var/hyperledger/cli/config/ # genesis.block and channel.tx's
+      - ../fabric-config/crypto-config/peerOrganizations/mitra.maarif.ac.id:/var/hyperledger/cli/crypto/
+      - ../fabric-config/chaincode-packages:/var/hyperledger/cli/chaincode-packages/
+      - "$CHAINCODES_BASE_DIR/./chaincodes/chaincode-ijazah/:/var/hyperledger/cli/chaincode-ijazah/"
+      - "$CHAINCODES_BASE_DIR/./chaincodes/chaincode-sertifikat/:/var/hyperledger/cli/chaincode-sertifikat/"
+    networks:
+      - basic
+
+  fablo-rest.mitra.maarif.ac.id:
+    container_name: fablo-rest.mitra.maarif.ac.id
+    image: fakhrads/fablo-rest:${FABLO_REST_VERSION}
+    environment:
+      - PORT=8000
+      - MSP_ID=MitraMSP
+      - FABRIC_CA_URL=http://ca.mitra.maarif.ac.id:7054
+      - FABRIC_CA_NAME=ca.mitra.maarif.ac.id
+      - AS_LOCALHOST=false
+      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101,grpc://peer0.siswa.maarif.ac.id:7121
+      - HFC_LOGGING={"error":"console","warn":"console","info":"console"}
+    ports:
+      - 8804:8000
+    networks:
+      - basic
+
+  peer0.mitra.maarif.ac.id:
+    container_name: peer0.mitra.maarif.ac.id
+    image: hyperledger/fabric-peer:${FABRIC_VERSION}
+    environment:
+      - CORE_PEER_LOCALMSPID=MitraMSP
+      - CORE_PEER_ID=peer0.mitra.maarif.ac.id
+      - CORE_PEER_ADDRESS=peer0.mitra.maarif.ac.id:7101
+      - CORE_PEER_LISTENADDRESS=peer0.mitra.maarif.ac.id:7101
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.mitra.maarif.ac.id:7101
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.mitra.maarif.ac.id:7101
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.mitra.maarif.ac.id:7101
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.mitra.maarif.ac.id:7050
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/peer/msp
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:${FABRIC_CCENV_VERSION}
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:${FABRIC_BASEOS_VERSION}
+      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:${FABRIC_JAVAENV_VERSION}
+      #
+      - CORE_CHAINCODE_LOGGING_LEVEL=${LOGGING_LEVEL}
+      - CORE_CHAINCODE_LOGGING_SHIM=${LOGGING_LEVEL}
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+      # metrics
+      - CORE_OPERATIONS_LISTENADDRESS=peer0.mitra.maarif.ac.id:9440
+      - CORE_METRICS_PROVIDER=prometheus
+      #
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_basic
+      - CORE_VM_DOCKER_ATTACHSTDOUT=true
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - GODEBUG=netdns=go
+      # enabled gateway
+      - CORE_PEER_GATEWAY_ENABLED=true
+    working_dir: /etc/hyperledger/fabric/peer/
+    command: peer node start
+    ports:
+      - 8101:9440
+      - 7101:7101
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - ../fabric-config/crypto-config/peerOrganizations/mitra.maarif.ac.id/peers/peer0.mitra.maarif.ac.id/msp:/etc/hyperledger/fabric/peer/msp
+      - ../fabric-config/crypto-config/peerOrganizations/mitra.maarif.ac.id/peers/peer0.mitra.maarif.ac.id/tls:/etc/hyperledger/fabric/peer/tls
+      - ../fabric-config/crypto-config/peerOrganizations/mitra.maarif.ac.id/users:/etc/hyperledger/fabric/peer/msp/users
+      - ../fabric-config/config:/etc/hyperledger/fabric/config
+    networks:
+      - basic
+
+  ca.siswa.maarif.ac.id:
+    container_name: ca.siswa.maarif.ac.id
+    image: hyperledger/fabric-ca:${FABRIC_CA_VERSION}
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.siswa.maarif.ac.id
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server/crypto/ca.siswa.maarif.ac.id-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server/crypto/priv-key.pem
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+    ports:
+      - 7120:7054
+    working_dir: /etc/hyperledger/fabric-ca-server
+    command: sh -c 'fabric-ca-server start -b ${SISWA_CA_ADMIN_NAME}:${SISWA_CA_ADMIN_PASSWORD} -d'
+    volumes:
+      - ../fabric-config/crypto-config/peerOrganizations/siswa.maarif.ac.id/ca/:/etc/hyperledger/fabric-ca-server/crypto
+      - ../fabric-config/fabric-ca-server-config/siswa.maarif.ac.id/fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml
+    networks:
+      - basic
+
+  cli.siswa.maarif.ac.id:
+    container_name: cli.siswa.maarif.ac.id
+    image: hyperledger/fabric-tools:${FABRIC_VERSION}
+    tty: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+      - CORE_PEER_ID=cli.siswa.maarif.ac.id
+      - CORE_CHAINCODE_KEEPALIVE=10
+      #
+      - CORE_PEER_LOCALMSPID=SiswaMSP
+      - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/cli/crypto/users/Admin@siswa.maarif.ac.id/msp
+      - CORE_PEER_ADDRESS=peer0.siswa.maarif.ac.id:7121
+    working_dir: /var/hyperledger/cli/
+    command: /bin/bash
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - ../fabric-docker/scripts/cli:/var/hyperledger/cli/scripts/
+      - ../fabric-config/config:/var/hyperledger/cli/config/ # genesis.block and channel.tx's
+      - ../fabric-config/crypto-config/peerOrganizations/siswa.maarif.ac.id:/var/hyperledger/cli/crypto/
+      - ../fabric-config/chaincode-packages:/var/hyperledger/cli/chaincode-packages/
+      - "$CHAINCODES_BASE_DIR/./chaincodes/chaincode-ijazah/:/var/hyperledger/cli/chaincode-ijazah/"
+      - "$CHAINCODES_BASE_DIR/./chaincodes/chaincode-sertifikat/:/var/hyperledger/cli/chaincode-sertifikat/"
+    networks:
+      - basic
+
+  fablo-rest.siswa.maarif.ac.id:
+    container_name: fablo-rest.siswa.maarif.ac.id
+    image: fakhrads/fablo-rest:${FABLO_REST_VERSION}
+    environment:
+      - PORT=8000
+      - MSP_ID=SiswaMSP
+      - FABRIC_CA_URL=http://ca.siswa.maarif.ac.id:7054
+      - FABRIC_CA_NAME=ca.siswa.maarif.ac.id
+      - AS_LOCALHOST=false
+      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101,grpc://peer0.siswa.maarif.ac.id:7121
+      - HFC_LOGGING={"error":"console","warn":"console","info":"console"}
+    ports:
+      - 8805:8000
+    networks:
+      - basic
+
+  peer0.siswa.maarif.ac.id:
+    container_name: peer0.siswa.maarif.ac.id
+    image: hyperledger/fabric-peer:${FABRIC_VERSION}
+    environment:
+      - CORE_PEER_LOCALMSPID=SiswaMSP
+      - CORE_PEER_ID=peer0.siswa.maarif.ac.id
+      - CORE_PEER_ADDRESS=peer0.siswa.maarif.ac.id:7121
+      - CORE_PEER_LISTENADDRESS=peer0.siswa.maarif.ac.id:7121
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.siswa.maarif.ac.id:7121
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.siswa.maarif.ac.id:7121
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.siswa.maarif.ac.id:7121
+      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.siswa.maarif.ac.id:7050
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/peer/msp
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:${FABRIC_CCENV_VERSION}
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:${FABRIC_BASEOS_VERSION}
+      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:${FABRIC_JAVAENV_VERSION}
+      #
+      - CORE_CHAINCODE_LOGGING_LEVEL=${LOGGING_LEVEL}
+      - CORE_CHAINCODE_LOGGING_SHIM=${LOGGING_LEVEL}
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+      # metrics
+      - CORE_OPERATIONS_LISTENADDRESS=peer0.siswa.maarif.ac.id:9440
+      - CORE_METRICS_PROVIDER=prometheus
+      #
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_basic
+      - CORE_VM_DOCKER_ATTACHSTDOUT=true
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - GODEBUG=netdns=go
+      # enabled gateway
+      - CORE_PEER_GATEWAY_ENABLED=true
+    working_dir: /etc/hyperledger/fabric/peer/
+    command: peer node start
+    ports:
+      - 8121:9440
+      - 7121:7121
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - ../fabric-config/crypto-config/peerOrganizations/siswa.maarif.ac.id/peers/peer0.siswa.maarif.ac.id/msp:/etc/hyperledger/fabric/peer/msp
+      - ../fabric-config/crypto-config/peerOrganizations/siswa.maarif.ac.id/peers/peer0.siswa.maarif.ac.id/tls:/etc/hyperledger/fabric/peer/tls
+      - ../fabric-config/crypto-config/peerOrganizations/siswa.maarif.ac.id/users:/etc/hyperledger/fabric/peer/msp/users
+      - ../fabric-config/config:/etc/hyperledger/fabric/config
+    networks:
+      - basic

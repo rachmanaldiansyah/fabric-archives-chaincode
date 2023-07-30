@@ -1,0 +1,8 @@
+PeerOrgs:
+  - Name: Siswa
+    Domain: siswa.maarif.ac.id
+    Specs:
+    Template:
+      Count: 1
+    Users:
+      Count: 1

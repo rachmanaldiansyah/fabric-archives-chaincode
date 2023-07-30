@@ -1,0 +1,8 @@
+PeerOrgs:
+  - Name: KepalaSekolah
+    Domain: kepsek.maarif.ac.id
+    Specs:
+    Template:
+      Count: 2
+    Users:
+      Count: 1

@@ -1,0 +1,303 @@
+################################################################################
+#   SECTION: Capabilities
+################################################################################
+Capabilities:
+    Channel: &ChannelCapabilities
+        V2_0: true
+    Orderer: &OrdererCapabilities
+        V2_0: true
+    Application: &ApplicationCapabilities
+        V2_0: true
+
+################################################################################
+#   CHANNEL Defaults
+################################################################################
+Channel: &ChannelDefaults
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+    Capabilities:
+        <<: *ChannelCapabilities
+
+################################################################################
+#   Section: Organizations
+################################################################################
+Organizations:
+    - &Maarif
+      Name: MaarifMSP
+      ID: MaarifMSP
+      MSPDir: crypto-config/peerOrganizations/maarif.orderer.ac.id/msp
+
+      Policies:
+          Readers:
+              Type: Signature
+              Rule: "OR('MaarifMSP.member')"
+          Writers:
+              Type: Signature
+              Rule: "OR('MaarifMSP.member')"
+          Admins:
+              Type: Signature
+              Rule: "OR('MaarifMSP.admin')"
+          Endorsement:
+              Type: Signature
+              Rule: "OR('MaarifMSP.member')"
+
+      AnchorPeers:
+
+    - &KepalaSekolah
+      Name: KepalaSekolahMSP
+      ID: KepalaSekolahMSP
+      MSPDir: crypto-config/peerOrganizations/kepsek.maarif.ac.id/msp
+
+      Policies:
+          Readers:
+              Type: Signature
+              Rule: "OR('KepalaSekolahMSP.member')"
+          Writers:
+              Type: Signature
+              Rule: "OR('KepalaSekolahMSP.member')"
+          Admins:
+              Type: Signature
+              Rule: "OR('KepalaSekolahMSP.admin')"
+          Endorsement:
+              Type: Signature
+              Rule: "OR('KepalaSekolahMSP.member')"
+
+      AnchorPeers:
+          - Host: peer0.kepsek.maarif.ac.id
+            Port: 7041
+
+          - Host: peer1.kepsek.maarif.ac.id
+            Port: 7042
+
+    - &Kesiswaan
+      Name: KesiswaanMSP
+      ID: KesiswaanMSP
+      MSPDir: crypto-config/peerOrganizations/kesiswaan.maarif.ac.id/msp
+
+      Policies:
+          Readers:
+              Type: Signature
+              Rule: "OR('KesiswaanMSP.member')"
+          Writers:
+              Type: Signature
+              Rule: "OR('KesiswaanMSP.member')"
+          Admins:
+              Type: Signature
+              Rule: "OR('KesiswaanMSP.admin')"
+          Endorsement:
+              Type: Signature
+              Rule: "OR('KesiswaanMSP.member')"
+
+      AnchorPeers:
+          - Host: peer0.kesiswaan.maarif.ac.id
+            Port: 7061
+
+    - &Stafftu
+      Name: StafftuMSP
+      ID: StafftuMSP
+      MSPDir: crypto-config/peerOrganizations/stafftu.maarif.ac.id/msp
+
+      Policies:
+          Readers:
+              Type: Signature
+              Rule: "OR('StafftuMSP.member')"
+          Writers:
+              Type: Signature
+              Rule: "OR('StafftuMSP.member')"
+          Admins:
+              Type: Signature
+              Rule: "OR('StafftuMSP.admin')"
+          Endorsement:
+              Type: Signature
+              Rule: "OR('StafftuMSP.member')"
+
+      AnchorPeers:
+          - Host: peer0.stafftu.maarif.ac.id
+            Port: 7081
+
+    - &Mitra
+      Name: MitraMSP
+      ID: MitraMSP
+      MSPDir: crypto-config/peerOrganizations/mitra.maarif.ac.id/msp
+
+      Policies:
+          Readers:
+              Type: Signature
+              Rule: "OR('MitraMSP.member')"
+          Writers:
+              Type: Signature
+              Rule: "OR('MitraMSP.member')"
+          Admins:
+              Type: Signature
+              Rule: "OR('MitraMSP.admin')"
+          Endorsement:
+              Type: Signature
+              Rule: "OR('MitraMSP.member')"
+
+      AnchorPeers:
+          - Host: peer0.mitra.maarif.ac.id
+            Port: 7101
+
+    - &Siswa
+      Name: SiswaMSP
+      ID: SiswaMSP
+      MSPDir: crypto-config/peerOrganizations/siswa.maarif.ac.id/msp
+
+      Policies:
+          Readers:
+              Type: Signature
+              Rule: "OR('SiswaMSP.member')"
+          Writers:
+              Type: Signature
+              Rule: "OR('SiswaMSP.member')"
+          Admins:
+              Type: Signature
+              Rule: "OR('SiswaMSP.admin')"
+          Endorsement:
+              Type: Signature
+              Rule: "OR('SiswaMSP.member')"
+
+      AnchorPeers:
+          - Host: peer0.siswa.maarif.ac.id
+            Port: 7121
+
+################################################################################
+#   SECTION: Application
+################################################################################
+Application: &ApplicationDefaults
+    Organizations:
+    # Policies defines the set of policies at this level of the config tree
+    # For Application policies, their canonical path is
+    #   /Channel/Application/<PolicyName>
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        Endorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
+    Capabilities:
+        <<: *ApplicationCapabilities
+
+################################################################################
+#   SECTION: Orderer
+################################################################################
+Orderer: &MaarifDefaults
+    OrdererType: solo
+    Addresses:
+        - orderer0.maarif.maarif.orderer.ac.id:7030
+    BatchTimeout: 2s
+    BatchSize:
+        MaxMessageCount: 10
+        AbsoluteMaxBytes: 99 MB
+        PreferredMaxBytes: 512 KB
+    Organizations:
+    # Policies defines the set of policies at this level of the config tree
+    # For Orderer policies, their canonical path is
+    #   /Channel/Orderer/<PolicyName>
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        # BlockValidation specifies what signatures must be included in the block
+        # from the orderer for the peer to validate it.
+        BlockValidation:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+    Capabilities:
+        <<: *OrdererCapabilities
+
+################################################################################
+#   Profile
+################################################################################
+# https://github:com/hyperledger/fabric/blob/master/sampleconfig/configtx.yaml
+
+Profiles:
+    # Profile used to create Genesis block for group maarif #
+    MaarifGenesis:
+        <<: *ChannelDefaults
+        Orderer:
+            <<: *MaarifDefaults
+            Organizations:
+                - *Maarif
+            Capabilities:
+                <<: *OrdererCapabilities
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *Maarif
+                    - *KepalaSekolah
+                    - *Kesiswaan
+                    - *Stafftu
+                    - *Mitra
+                    - *Siswa
+
+    # Profile used to create channeltx for arsip-ijazah #
+    ArsipIjazah:
+        <<: *ChannelDefaults
+        Orderer:
+            <<: *MaarifDefaults
+            Organizations:
+                - *Maarif
+            Capabilities:
+                <<: *ApplicationCapabilities
+        Consortium: SampleConsortium
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *KepalaSekolah
+                    - *Kesiswaan
+                    - *Stafftu
+                    - *Siswa
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *KepalaSekolah
+                - *Kesiswaan
+                - *Stafftu
+                - *Siswa
+
+    # Profile used to create channeltx for arsip-sertifikat #
+    ArsipSertifikat:
+        <<: *ChannelDefaults
+        Orderer:
+            <<: *MaarifDefaults
+            Organizations:
+                - *Maarif
+            Capabilities:
+                <<: *ApplicationCapabilities
+        Consortium: SampleConsortium
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *KepalaSekolah
+                    - *Stafftu
+                    - *Mitra
+                    - *Siswa
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *KepalaSekolah
+                - *Stafftu
+                - *Mitra
+                - *Siswa

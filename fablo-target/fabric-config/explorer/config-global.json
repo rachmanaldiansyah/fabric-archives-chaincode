@@ -1,0 +1,25 @@
+{
+  "network-configs": {
+    "network-kepalasekolah": {
+      "name": "Network of KepalaSekolah",
+      "profile": "/opt/explorer/app/platform/fabric/connection-profile/connection-profile-kepalasekolah.json"
+    },
+    "network-kesiswaan": {
+      "name": "Network of Kesiswaan",
+      "profile": "/opt/explorer/app/platform/fabric/connection-profile/connection-profile-kesiswaan.json"
+    },
+    "network-stafftu": {
+      "name": "Network of Stafftu",
+      "profile": "/opt/explorer/app/platform/fabric/connection-profile/connection-profile-stafftu.json"
+    },
+    "network-mitra": {
+      "name": "Network of Mitra",
+      "profile": "/opt/explorer/app/platform/fabric/connection-profile/connection-profile-mitra.json"
+    },
+    "network-siswa": {
+      "name": "Network of Siswa",
+      "profile": "/opt/explorer/app/platform/fabric/connection-profile/connection-profile-siswa.json"
+    }
+  },
+  "license": "Apache-2.0"
+}

@@ -1,0 +1,172 @@
+{
+  "$schema": "https://github.com/fakhrads/fablo/releases/download/1.1.2/schema.json",
+  "global": {
+    "fabricVersion": "2.5.3",
+    "tls": false,
+    "peerDevMode": false,
+    "tools": {
+      "explorer": false
+    }
+  },
+  "orgs": [
+    {
+      "organization": {
+        "name": "Maarif",
+        "domain": "maarif.orderer.ac.id"
+      },
+      "orderers": [
+        {
+          "groupName": "maarif",
+          "type": "solo",
+          "instances": 1
+        }
+      ],
+      "tools": {
+        "fabloRest": true
+      }
+    },
+    {
+      "organization": {
+        "name": "KepalaSekolah",
+        "domain": "kepsek.maarif.ac.id"
+      },
+      "peer": {
+        "instances": 2,
+        "db": "CouchDb"
+      },
+      "tools": {
+        "fabloRest": true
+      }
+    },
+    {
+      "organization": {
+        "name": "Kesiswaan",
+        "domain": "kesiswaan.maarif.ac.id"
+      },
+      "peer": {
+        "instances": 1,
+        "db": "CouchDb"
+      },
+      "tools": {
+        "fabloRest": true
+      }
+    },
+    {
+      "organization": {
+        "name": "Stafftu",
+        "domain": "stafftu.maarif.ac.id"
+      },
+      "peer": {
+        "instances": 1,
+        "db": "CouchDb"
+      },
+      "tools": {
+        "fabloRest": true
+      }
+    },
+    {
+      "organization": {
+        "name": "Mitra",
+        "domain": "mitra.maarif.ac.id"
+      },
+      "peer": {
+        "instances": 1,
+        "db": "CouchDb"
+      },
+      "tools": {
+        "fabloRest": true
+      }
+    },
+    {
+      "organization": {
+        "name": "Siswa",
+        "domain": "siswa.maarif.ac.id"
+      },
+      "peer": {
+        "instances": 1,
+        "db": "CouchDb"
+      },
+      "tools": {
+        "fabloRest": true
+      }
+    }
+  ],
+  "channels": [
+    {
+      "name": "arsip-ijazah",
+      "orgs": [
+        {
+          "name": "Stafftu",
+          "peers": [
+            "peer0"
+          ]
+        },
+        {
+          "name": "KepalaSekolah",
+          "peers": [
+            "peer0",
+            "peer1"
+          ]
+        },
+        {
+          "name": "Kesiswaan",
+          "peers": [
+            "peer0"
+          ]
+        },
+        {
+          "name": "Siswa",
+          "peers": [
+            "peer0"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "arsip-sertifikat",
+      "orgs": [
+        {
+          "name": "Stafftu",
+          "peers": [
+            "peer0"
+          ]
+        },
+        {
+          "name": "KepalaSekolah",
+          "peers": [
+            "peer0",
+            "peer1"
+          ]
+        },
+        {
+          "name": "Mitra",
+          "peers": [
+            "peer0"
+          ]
+        },
+        {
+          "name": "Siswa",
+          "peers": [
+            "peer0"
+          ]
+        }
+      ]
+    }
+  ],
+  "chaincodes": [
+    {
+      "name": "chaincode-ijazah",
+      "version": "0.0.1",
+      "lang": "node",
+      "channel": "arsip-ijazah",
+      "directory": "./chaincodes/chaincode-ijazah"
+    },
+    {
+      "name": "chaincode-sertifikat",
+      "version": "0.0.1",
+      "lang": "node",
+      "channel": "arsip-sertifikat",
+      "directory": "./chaincodes/chaincode-sertifikat"
+    }
+  ]
+}

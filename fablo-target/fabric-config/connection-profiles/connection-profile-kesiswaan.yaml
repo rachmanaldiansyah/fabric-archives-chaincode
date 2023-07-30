@@ -1,0 +1,36 @@
+name: fablo-test-network-kesiswaan
+description: Connection profile for Kesiswaan in Fablo network
+version: 1.0.0
+client:
+  organization: Kesiswaan
+organizations:
+  Kesiswaan:
+    mspid: KesiswaanMSP
+    peers:
+      - peer0.kepsek.maarif.ac.id
+      - peer1.kepsek.maarif.ac.id
+      - peer0.kesiswaan.maarif.ac.id
+      - peer0.stafftu.maarif.ac.id
+      - peer0.mitra.maarif.ac.id
+      - peer0.siswa.maarif.ac.id
+    certificateAuthorities:
+      - ca.kesiswaan.maarif.ac.id
+peers:
+  peer0.kepsek.maarif.ac.id:
+    url: grpc://localhost:7041
+  peer1.kepsek.maarif.ac.id:
+    url: grpc://localhost:7042
+  peer0.kesiswaan.maarif.ac.id:
+    url: grpc://localhost:7061
+  peer0.stafftu.maarif.ac.id:
+    url: grpc://localhost:7081
+  peer0.mitra.maarif.ac.id:
+    url: grpc://localhost:7101
+  peer0.siswa.maarif.ac.id:
+    url: grpc://localhost:7121
+certificateAuthorities:
+  ca.kesiswaan.maarif.ac.id:
+    url: http://localhost:7060
+    caName: ca.kesiswaan.maarif.ac.id
+    httpOptions:
+      verify: false
