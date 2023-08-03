@@ -180,6 +180,11 @@ services:
       - CORE_VM_DOCKER_ATTACHSTDOUT=true
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - GODEBUG=netdns=go
+      # CouchDB
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.kepsek.maarif.ac.id:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=peer0
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=peer0Password
       # enabled gateway
       - CORE_PEER_GATEWAY_ENABLED=true
     working_dir: /etc/hyperledger/fabric/peer/
@@ -196,6 +201,16 @@ services:
     networks:
       - basic
 
+  couchdb.peer0.kepsek.maarif.ac.id:
+    container_name: couchdb.peer0.kepsek.maarif.ac.id
+    image: couchdb:${COUCHDB_VERSION}
+    environment:
+      - COUCHDB_USER=peer0
+      - COUCHDB_PASSWORD=peer0Password
+    ports:
+      - 5100:5984
+    networks:
+      - basic
   peer1.kepsek.maarif.ac.id:
     container_name: peer1.kepsek.maarif.ac.id
     image: hyperledger/fabric-peer:${FABRIC_VERSION}
@@ -224,6 +239,11 @@ services:
       - CORE_VM_DOCKER_ATTACHSTDOUT=true
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - GODEBUG=netdns=go
+      # CouchDB
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer1.kepsek.maarif.ac.id:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=peer1
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=peer1Password
       # enabled gateway
       - CORE_PEER_GATEWAY_ENABLED=true
     working_dir: /etc/hyperledger/fabric/peer/
@@ -237,6 +257,17 @@ services:
       - ../fabric-config/crypto-config/peerOrganizations/kepsek.maarif.ac.id/peers/peer1.kepsek.maarif.ac.id/tls:/etc/hyperledger/fabric/peer/tls
       - ../fabric-config/crypto-config/peerOrganizations/kepsek.maarif.ac.id/users:/etc/hyperledger/fabric/peer/msp/users
       - ../fabric-config/config:/etc/hyperledger/fabric/config
+    networks:
+      - basic
+
+  couchdb.peer1.kepsek.maarif.ac.id:
+    container_name: couchdb.peer1.kepsek.maarif.ac.id
+    image: couchdb:${COUCHDB_VERSION}
+    environment:
+      - COUCHDB_USER=peer1
+      - COUCHDB_PASSWORD=peer1Password
+    ports:
+      - 5101:5984
     networks:
       - basic
 
@@ -330,6 +361,11 @@ services:
       - CORE_VM_DOCKER_ATTACHSTDOUT=true
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - GODEBUG=netdns=go
+      # CouchDB
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.kesiswaan.maarif.ac.id:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=peer0
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=peer0Password
       # enabled gateway
       - CORE_PEER_GATEWAY_ENABLED=true
     working_dir: /etc/hyperledger/fabric/peer/
@@ -343,6 +379,17 @@ services:
       - ../fabric-config/crypto-config/peerOrganizations/kesiswaan.maarif.ac.id/peers/peer0.kesiswaan.maarif.ac.id/tls:/etc/hyperledger/fabric/peer/tls
       - ../fabric-config/crypto-config/peerOrganizations/kesiswaan.maarif.ac.id/users:/etc/hyperledger/fabric/peer/msp/users
       - ../fabric-config/config:/etc/hyperledger/fabric/config
+    networks:
+      - basic
+
+  couchdb.peer0.kesiswaan.maarif.ac.id:
+    container_name: couchdb.peer0.kesiswaan.maarif.ac.id
+    image: couchdb:${COUCHDB_VERSION}
+    environment:
+      - COUCHDB_USER=peer0
+      - COUCHDB_PASSWORD=peer0Password
+    ports:
+      - 5120:5984
     networks:
       - basic
 
@@ -408,6 +455,49 @@ services:
     networks:
       - basic
 
+  db.explorer.stafftu.maarif.ac.id:
+    image: hyperledger/explorer-db:${HYPERLEDGER_EXPLORER_VERSION}
+    container_name: db.explorer.stafftu.maarif.ac.id
+    environment:
+      - DATABASE_DATABASE=fabricexplorer
+      - DATABASE_USERNAME=hppoc
+      - DATABASE_PASSWORD=password
+    healthcheck:
+      test: "pg_isready -h localhost -p 5432 -q -U postgres"
+      interval: 5s
+      timeout: 10s
+      retries: 7
+    volumes:
+      - /var/lib/postgresql/data
+    networks:
+      - basic
+
+  explorer.stafftu.maarif.ac.id:
+    image: hyperledger/explorer:${HYPERLEDGER_EXPLORER_VERSION}
+    restart: on-failure:8
+    container_name: explorer.stafftu.maarif.ac.id
+    environment:
+      - DATABASE_HOST=db.explorer.stafftu.maarif.ac.id
+      - DATABASE_DATABASE=fabricexplorer
+      - DATABASE_USERNAME=hppoc
+      - DATABASE_PASSWD=password
+      - LOG_LEVEL_APP=debug
+      - LOG_LEVEL_DB=debug
+      - LOG_LEVEL_CONSOLE=info
+      - LOG_CONSOLE_STDOUT=true
+      - DISCOVERY_AS_LOCALHOST=false
+    volumes:
+      - ../fabric-config/explorer/config-stafftu.json:/opt/explorer/app/platform/fabric/config.json
+      - ../fabric-config/explorer/connection-profile-stafftu.json:/opt/explorer/app/platform/fabric/connection-profile/connection-profile-stafftu.json
+      - ../fabric-config/crypto-config:/tmp/crypto
+    ports:
+      - "7013:8080"
+    depends_on:
+      db.explorer.stafftu.maarif.ac.id:
+        condition: service_healthy
+    networks:
+      - basic
+
   peer0.stafftu.maarif.ac.id:
     container_name: peer0.stafftu.maarif.ac.id
     image: hyperledger/fabric-peer:${FABRIC_VERSION}
@@ -436,6 +526,11 @@ services:
       - CORE_VM_DOCKER_ATTACHSTDOUT=true
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - GODEBUG=netdns=go
+      # CouchDB
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.stafftu.maarif.ac.id:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=peer0
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=peer0Password
       # enabled gateway
       - CORE_PEER_GATEWAY_ENABLED=true
     working_dir: /etc/hyperledger/fabric/peer/
@@ -449,6 +544,17 @@ services:
       - ../fabric-config/crypto-config/peerOrganizations/stafftu.maarif.ac.id/peers/peer0.stafftu.maarif.ac.id/tls:/etc/hyperledger/fabric/peer/tls
       - ../fabric-config/crypto-config/peerOrganizations/stafftu.maarif.ac.id/users:/etc/hyperledger/fabric/peer/msp/users
       - ../fabric-config/config:/etc/hyperledger/fabric/config
+    networks:
+      - basic
+
+  couchdb.peer0.stafftu.maarif.ac.id:
+    container_name: couchdb.peer0.stafftu.maarif.ac.id
+    image: couchdb:${COUCHDB_VERSION}
+    environment:
+      - COUCHDB_USER=peer0
+      - COUCHDB_PASSWORD=peer0Password
+    ports:
+      - 5140:5984
     networks:
       - basic
 
@@ -542,6 +648,11 @@ services:
       - CORE_VM_DOCKER_ATTACHSTDOUT=true
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - GODEBUG=netdns=go
+      # CouchDB
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.mitra.maarif.ac.id:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=peer0
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=peer0Password
       # enabled gateway
       - CORE_PEER_GATEWAY_ENABLED=true
     working_dir: /etc/hyperledger/fabric/peer/
@@ -555,6 +666,17 @@ services:
       - ../fabric-config/crypto-config/peerOrganizations/mitra.maarif.ac.id/peers/peer0.mitra.maarif.ac.id/tls:/etc/hyperledger/fabric/peer/tls
       - ../fabric-config/crypto-config/peerOrganizations/mitra.maarif.ac.id/users:/etc/hyperledger/fabric/peer/msp/users
       - ../fabric-config/config:/etc/hyperledger/fabric/config
+    networks:
+      - basic
+
+  couchdb.peer0.mitra.maarif.ac.id:
+    container_name: couchdb.peer0.mitra.maarif.ac.id
+    image: couchdb:${COUCHDB_VERSION}
+    environment:
+      - COUCHDB_USER=peer0
+      - COUCHDB_PASSWORD=peer0Password
+    ports:
+      - 5160:5984
     networks:
       - basic
 
@@ -648,6 +770,11 @@ services:
       - CORE_VM_DOCKER_ATTACHSTDOUT=true
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - GODEBUG=netdns=go
+      # CouchDB
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.siswa.maarif.ac.id:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=peer0
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=peer0Password
       # enabled gateway
       - CORE_PEER_GATEWAY_ENABLED=true
     working_dir: /etc/hyperledger/fabric/peer/
@@ -661,5 +788,16 @@ services:
       - ../fabric-config/crypto-config/peerOrganizations/siswa.maarif.ac.id/peers/peer0.siswa.maarif.ac.id/tls:/etc/hyperledger/fabric/peer/tls
       - ../fabric-config/crypto-config/peerOrganizations/siswa.maarif.ac.id/users:/etc/hyperledger/fabric/peer/msp/users
       - ../fabric-config/config:/etc/hyperledger/fabric/config
+    networks:
+      - basic
+
+  couchdb.peer0.siswa.maarif.ac.id:
+    container_name: couchdb.peer0.siswa.maarif.ac.id
+    image: couchdb:${COUCHDB_VERSION}
+    environment:
+      - COUCHDB_USER=peer0
+      - COUCHDB_PASSWORD=peer0Password
+    ports:
+      - 5180:5984
     networks:
       - basic

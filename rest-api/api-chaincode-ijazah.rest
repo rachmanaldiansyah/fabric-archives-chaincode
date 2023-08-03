@@ -1,0 +1,19 @@
+curl --request POST \
+     --url http://144.126.209.213:8803/invoke/ijazah/chaincode-ijazah \
+     --Access-Control-Allow-Origin: * \
+     --header 'Authorization: Bearer 9b0ef0b0-31c5-11ee-9409-33514e3d0d9a-admin' \
+     --data '{
+        "method": "CreateAsset",
+        "args": [
+            "M-SMK/06-3/0000213",
+            "0054723235",
+            "2021.10.1005",
+            "Ahyar Maulidin",
+            "Laki-laki",
+            "Asep Mulyadi",
+            "Teknik Komputer & Jaringan",
+            "bafybeiagevvnocxpg232abu2hmnlvriv3jjysojcierrsyypcyeygticcq",
+            "Dikonfirmasi",
+            "Dikonfirmasi"
+        ]
+     }'

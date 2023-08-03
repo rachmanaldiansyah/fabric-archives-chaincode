@@ -3,10 +3,7 @@
   "global": {
     "fabricVersion": "2.5.3",
     "tls": false,
-    "peerDevMode": false,
-    "tools": {
-      "explorer": false
-    }
+    "peerDevMode": false
   },
   "orgs": [
     {
@@ -61,7 +58,8 @@
         "db": "CouchDb"
       },
       "tools": {
-        "fabloRest": true
+        "fabloRest": true,
+        "explorer": true
       }
     },
     {
@@ -93,7 +91,7 @@
   ],
   "channels": [
     {
-      "name": "arsip-ijazah",
+      "name": "ijazah",
       "orgs": [
         {
           "name": "Stafftu",
@@ -123,7 +121,7 @@
       ]
     },
     {
-      "name": "arsip-sertifikat",
+      "name": "sertifikat",
       "orgs": [
         {
           "name": "Stafftu",
@@ -158,14 +156,14 @@
       "name": "chaincode-ijazah",
       "version": "0.0.1",
       "lang": "node",
-      "channel": "arsip-ijazah",
+      "channel": "ijazah",
       "directory": "./chaincodes/chaincode-ijazah"
     },
     {
       "name": "chaincode-sertifikat",
       "version": "0.0.1",
       "lang": "node",
-      "channel": "arsip-sertifikat",
+      "channel": "sertifikat",
       "directory": "./chaincodes/chaincode-sertifikat"
     }
   ]

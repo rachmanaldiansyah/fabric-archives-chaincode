@@ -252,8 +252,8 @@ Profiles:
                     - *Mitra
                     - *Siswa
 
-    # Profile used to create channeltx for arsip-ijazah #
-    ArsipIjazah:
+    # Profile used to create channeltx for ijazah #
+    Ijazah:
         <<: *ChannelDefaults
         Orderer:
             <<: *MaarifDefaults
@@ -277,8 +277,8 @@ Profiles:
                 - *Stafftu
                 - *Siswa
 
-    # Profile used to create channeltx for arsip-sertifikat #
-    ArsipSertifikat:
+    # Profile used to create channeltx for sertifikat #
+    Sertifikat:
         <<: *ChannelDefaults
         Orderer:
             <<: *MaarifDefaults

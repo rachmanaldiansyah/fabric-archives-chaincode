@@ -7,7 +7,7 @@ import {Object, Property} from 'fabric-contract-api';
 @Object()
 export class Ijazah {
     @Property()
-    public ID: string;
+    public NoIjazah: string;
 
     @Property()
     public NISN: string;
@@ -25,11 +25,14 @@ export class Ijazah {
     public NamaOrangtua: string;
 
     @Property()
-    public ProgramKeahlian : string;
+    public Prodi : string;
 
     @Property()
-    public File: string;
+    public ArsipIjazah: string;
 
     @Property()
-    public Persetujuan: string;
+    public KonfirmasiKepsek: string;
+
+    @Property()
+    public KonfirmasiKesiswaan: string;
 }

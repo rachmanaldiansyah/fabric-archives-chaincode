@@ -1,0 +1,9 @@
+{
+  "network-configs": {
+    "network-stafftu": {
+      "name": "Network of Stafftu",
+      "profile": "/opt/explorer/app/platform/fabric/connection-profile/connection-profile-stafftu.json"
+    }
+  },
+  "license": "Apache-2.0"
+}

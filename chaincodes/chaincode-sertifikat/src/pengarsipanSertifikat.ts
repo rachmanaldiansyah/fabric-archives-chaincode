@@ -2,88 +2,90 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 // Deterministic JSON.stringify()
-import {Context, Contract, Info, Returns, Transaction} from 'fabric-contract-api';
+import { Context, Contract, Info, Returns, Transaction } from 'fabric-contract-api';
 import stringify from 'json-stringify-deterministic';
 import sortKeysRecursive from 'sort-keys-recursive';
-import {Sertifikat} from './sertifikat';
+import { Sertifikat } from './sertifikat';
 
-@Info({title: 'AssetTransfer', description: 'Smart contract for trading assets'})
+@Info({ title: 'AssetTransfer', description: 'Smart contract for trading assets' })
 export class PengarsipanSertifikat extends Contract {
-    
+
     // CreateAsset issues a new asset to the world state with given details.
     @Transaction()
-    public async CreateAsset(ctx: Context, id: string, nis: string, nama: string, jk: string, program_kompetensi: string, file: string, persetujuan: string): Promise<String> {
-        const exists = await this.AssetExists(ctx, id);
+    public async CreateAsset(ctx: Context, no_sertifikat: string, nis: string, nama: string, jk: string, keahlian: string, arsip_sertifikat: string, konfirmasi_kepsek: string, konfirmasi_mitra: string): Promise<String> {
+        const exists = await this.AssetExists(ctx, no_sertifikat);
         if (exists) {
-            throw new Error(`The asset ${id} already exists`);
+            throw new Error(`The asset ${no_sertifikat} already exists`);
         }
 
         const asset: Sertifikat = {
-            ID: id,
+            NoSertifikat: no_sertifikat,
             NIS: nis,
             Nama: nama,
             JK: jk,
-            ProgramKompetensi: program_kompetensi,
-            File: file,
-            Persetujuan: persetujuan,
+            Keahlian: keahlian,
+            ArsipSertifikat: arsip_sertifikat,
+            KonfirmasiKepsek: konfirmasi_kepsek,
+            KonfirmasiMitra: konfirmasi_mitra
         };
 
         // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
-        await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(asset))));
+        await ctx.stub.putState(no_sertifikat, Buffer.from(stringify(sortKeysRecursive(asset))));
         const idTx = ctx.stub.getTxID()
-        return 'Pendaftaran telah berhasil dilakukan, ID Transaksi: ' + idTx;
+        return 'Pengarsipan sertifikat uji kompetensi telah berhasil dilakukan, ID Transaksi: ' + idTx;
     }
 
     // ReadAsset returns the asset stored in the world state with given id.
     @Transaction(false)
-    public async ReadAsset(ctx: Context, id: string): Promise<string> {
-        const assetJSON = await ctx.stub.getState(id); // get the asset from chaincode state
+    public async ReadAsset(ctx: Context, no_sertifikat: string): Promise<string> {
+        const assetJSON = await ctx.stub.getState(no_sertifikat); // get the asset from chaincode state
         if (!assetJSON || assetJSON.length === 0) {
-            throw new Error(`The asset ${id} does not exist`);
+            throw new Error(`The asset ${no_sertifikat} does not exist`);
         }
         return assetJSON.toString();
     }
 
     // UpdateAsset updates an existing asset in the world state with provided parameters.
     @Transaction()
-    public async UpdateAsset(ctx: Context, id: string, nisn: string, nis: string, nama: string, jk: string, program_kompetensi: string, file: string, persetujuan: string): Promise<String> {
-        const exists = await this.AssetExists(ctx, id);
+    public async UpdateAsset(ctx: Context, no_sertifikat: string, nis: string, nama: string, jk: string, keahlian: string, arsip_sertifikat: string, konfirmasi_kepsek: string, konfirmasi_mitra: string): Promise<String> {
+        const exists = await this.AssetExists(ctx, no_sertifikat);
         if (!exists) {
-            throw new Error(`The asset ${id} does not exist`);
+            throw new Error(`The asset ${no_sertifikat} does not exist`);
         }
 
         // overwriting original asset with new asset
         const updatedAsset: Sertifikat = {
-            ID: id,
+            NoSertifikat: no_sertifikat,
             NIS: nis,
             Nama: nama,
             JK: jk,
-            ProgramKompetensi: program_kompetensi,
-            File: file,
-            Persetujuan: persetujuan,
+            Keahlian: keahlian,
+            ArsipSertifikat: arsip_sertifikat,
+            KonfirmasiKepsek: konfirmasi_kepsek,
+            KonfirmasiMitra: konfirmasi_mitra
         };
 
         // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
-        await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(updatedAsset))));
+        await ctx.stub.putState(no_sertifikat, Buffer.from(stringify(sortKeysRecursive(updatedAsset))));
         const idTrx = ctx.stub.getTxID();
-        return 'Ubah data pendaftaran telah berhasil diubah, ID Transaksi: ' + idTrx;
+        return 'Ubah data arsip sertifikat telah berhasil diubah, ID Transaksi: ' + idTrx;
     }
 
     // DeleteAsset deletes an given asset from the world state.
     @Transaction()
-    public async DeleteAsset(ctx: Context, id: string): Promise<void> {
-        const exists = await this.AssetExists(ctx, id);
+    public async DeleteAsset(ctx: Context, no_sertifikat: string): Promise<void> {
+        const exists = await this.AssetExists(ctx, no_sertifikat);
         if (!exists) {
-            throw new Error(`The asset ${id} does not exist`);
+            throw new Error(`The asset ${no_sertifikat} does not exist`);
         }
-        return ctx.stub.deleteState(id);
+        return ctx.stub.deleteState(no_sertifikat);
     }
 
     // AssetExists returns true when asset with given ID exists in world state.
     @Transaction(false)
     @Returns('boolean')
-    public async AssetExists(ctx: Context, id: string): Promise<boolean> {
-        const assetJSON = await ctx.stub.getState(id);
+    public async AssetExists(ctx: Context, no_sertifikat: string): Promise<boolean> {
+        const assetJSON = await ctx.stub.getState(no_sertifikat);
         return assetJSON && assetJSON.length > 0;
     }
 

@@ -1,0 +1,20 @@
+curl --request POST \
+  --url http://localhost:8803/user/enroll \
+  --header 'Authorization: Bearer ' \
+  --data '{"id": "admin", "secret": "adminpw"}'
+
+###
+curl --request POST \
+  --url http://localhost:8803/user/reenroll \
+  --header 'Authorization: Bearer 4dae0250-31c2-11ee-9409-33514e3d0d9a-admin'
+
+###
+curl --request POST \
+  --url http://localhost:8803/user/register \
+  --header 'Authorization: Bearer 4dae0250-31c2-11ee-9409-33514e3d0d9a-admin'
+  --data '{"id": "rachman", "secret": "rachman"}'
+
+###
+curl --request GET \
+  --url http://localhost:8803/user/identities \
+  --header 'Authorization: Bearer 4dae0250-31c2-11ee-9409-33514e3d0d9a-admin'

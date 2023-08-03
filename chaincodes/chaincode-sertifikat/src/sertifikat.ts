@@ -7,7 +7,7 @@ import {Object, Property} from 'fabric-contract-api';
 @Object()
 export class Sertifikat {
     @Property()
-    public ID: string;
+    public NoSertifikat: String;
 
     @Property()
     public NIS: string;
@@ -19,11 +19,14 @@ export class Sertifikat {
     public JK: string;
 
     @Property()
-    public ProgramKompetensi : string;
+    public Keahlian : string;
 
     @Property()
-    public File: string;
+    public ArsipSertifikat: string;
 
     @Property()
-    public Persetujuan: string;
+    public KonfirmasiKepsek: string;
+
+    @Property()
+    public KonfirmasiMitra: string;
 }
