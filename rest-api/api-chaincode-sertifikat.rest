@@ -1,7 +1,7 @@
 curl --request POST \
-     --url http://144.126.209.213:8803/invoke/ijazah/chaincode-ijazah \
+     --url http://144.126.209.213:8803/invoke/sertifikat/chaincode-sertifikat \
      --Access-Control-Allow-Origin: * \
-     --header 'Authorization: Bearer 9b0ef0b0-31c5-11ee-9409-33514e3d0d9a-admin' \
+     --header 'Authorization: Bearer {token}' \
      --data '{
         "method": "CreateAsset",
         "args": [
@@ -10,7 +10,6 @@ curl --request POST \
             "2021.10.1005",
             "Ahyar Maulidin",
             "Laki-laki",
-            "Asep Mulyadi",
             "Teknik Komputer & Jaringan",
             "bafybeiagevvnocxpg232abu2hmnlvriv3jjysojcierrsyypcyeygticcq",
             "Dikonfirmasi",
@@ -19,7 +18,7 @@ curl --request POST \
      }'
 
 curl --request POST \
-     --url http://144.126.209.213:8803/invoke/ijazah/chaincode-ijazah \
+     --url http://144.126.209.213:8803/invoke/sertifikat/chaincode-sertifikat \
      --Access-Control-Allow-Origin: * \
      --header 'Authorization: Bearer 9b0ef0b0-31c5-11ee-9409-33514e3d0d9a-admin' \
      --data '{
@@ -30,7 +29,6 @@ curl --request POST \
             "2021.10.1005",
             "Ahyar Maulidin",
             "Laki-laki",
-            "Asep Mulyadi",
             "Teknik Komputer & Jaringan",
             "bafybeiagevvnocxpg232abu2hmnlvriv3jjysojcierrsyypcyeygticcq",
             "Dikonfirmasi",
@@ -39,7 +37,7 @@ curl --request POST \
      }'
 
 curl --request POST \
-     --url http://144.126.209.213:8803/invoke/ijazah/chaincode-ijazah \
+     --url http://144.126.209.213:8803/invoke/sertifikat/chaincode-sertifikat \
      --Access-Control-Allow-Origin: * \
      --header 'Authorization: Bearer 9b0ef0b0-31c5-11ee-9409-33514e3d0d9a-admin' \
      --data '{
@@ -48,12 +46,12 @@ curl --request POST \
      }'
 
 curl --request POST \
-     --url http://144.126.209.213:8803/invoke/ijazah/chaincode-ijazah \
+     --url http://144.126.209.213:8803/invoke/sertifikat/chaincode-sertifikat \
      --Access-Control-Allow-Origin: * \
      --header 'Authorization: Bearer 9b0ef0b0-31c5-11ee-9409-33514e3d0d9a-admin' \
      --data '{
         "method": "DeletAsset",
         "args": [
-            ""M-SMK/06-3/0000213""
+            "{no_sertifikat}"
         ]
      }'

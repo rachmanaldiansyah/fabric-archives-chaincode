@@ -84,7 +84,7 @@ export class PengarsipanIjazah extends Contract {
         }
         return ctx.stub.deleteState(no_ijazah);
     }
-
+   
     // AssetExists returns true when asset with given ID exists in world state.
     @Transaction(false)
     @Returns('boolean')

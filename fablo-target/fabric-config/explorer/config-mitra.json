@@ -1,0 +1,9 @@
+{
+  "network-configs": {
+    "network-mitra": {
+      "name": "Network of Mitra",
+      "profile": "/opt/explorer/app/platform/fabric/connection-profile/connection-profile-mitra.json"
+    }
+  },
+  "license": "Apache-2.0"
+}

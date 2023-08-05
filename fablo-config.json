@@ -3,7 +3,10 @@
   "global": {
     "fabricVersion": "2.5.3",
     "tls": false,
-    "peerDevMode": false
+    "peerDevMode": false,
+    "tools": {
+      "explorer": true
+    }
   },
   "orgs": [
     {
@@ -58,8 +61,7 @@
         "db": "CouchDb"
       },
       "tools": {
-        "fabloRest": true,
-        "explorer": true
+        "fabloRest": true
       }
     },
     {
