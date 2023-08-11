@@ -76,19 +76,6 @@
       "tools": {
         "fabloRest": true
       }
-    },
-    {
-      "organization": {
-        "name": "Siswa",
-        "domain": "siswa.maarif.ac.id"
-      },
-      "peer": {
-        "instances": 1,
-        "db": "CouchDb"
-      },
-      "tools": {
-        "fabloRest": true
-      }
     }
   ],
   "channels": [
@@ -113,12 +100,6 @@
           "peers": [
             "peer0"
           ]
-        },
-        {
-          "name": "Siswa",
-          "peers": [
-            "peer0"
-          ]
         }
       ]
     },
@@ -140,12 +121,6 @@
         },
         {
           "name": "Mitra",
-          "peers": [
-            "peer0"
-          ]
-        },
-        {
-          "name": "Siswa",
           "peers": [
             "peer0"
           ]

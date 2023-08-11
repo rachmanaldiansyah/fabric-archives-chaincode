@@ -15,10 +15,6 @@
     "network-mitra": {
       "name": "Network of Mitra",
       "profile": "/opt/explorer/app/platform/fabric/connection-profile/connection-profile-mitra.json"
-    },
-    "network-siswa": {
-      "name": "Network of Siswa",
-      "profile": "/opt/explorer/app/platform/fabric/connection-profile/connection-profile-siswa.json"
     }
   },
   "license": "Apache-2.0"

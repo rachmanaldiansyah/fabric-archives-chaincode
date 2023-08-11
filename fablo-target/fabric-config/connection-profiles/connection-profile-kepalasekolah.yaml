@@ -12,7 +12,6 @@ organizations:
       - peer0.kesiswaan.maarif.ac.id
       - peer0.stafftu.maarif.ac.id
       - peer0.mitra.maarif.ac.id
-      - peer0.siswa.maarif.ac.id
     certificateAuthorities:
       - ca.kepsek.maarif.ac.id
 peers:
@@ -26,8 +25,6 @@ peers:
     url: grpc://localhost:7081
   peer0.mitra.maarif.ac.id:
     url: grpc://localhost:7101
-  peer0.siswa.maarif.ac.id:
-    url: grpc://localhost:7121
 certificateAuthorities:
   ca.kepsek.maarif.ac.id:
     url: http://localhost:7040

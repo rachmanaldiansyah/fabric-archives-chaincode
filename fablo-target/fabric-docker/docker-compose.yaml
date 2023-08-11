@@ -59,7 +59,7 @@ services:
       - FABRIC_CA_URL=http://ca.maarif.orderer.ac.id:7054
       - FABRIC_CA_NAME=ca.maarif.orderer.ac.id
       - AS_LOCALHOST=false
-      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101,grpc://peer0.siswa.maarif.ac.id:7121
+      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101
       - HFC_LOGGING={"error":"console","warn":"console","info":"console"}
     ports:
       - 8800:8000
@@ -145,7 +145,7 @@ services:
       - FABRIC_CA_URL=http://ca.kepsek.maarif.ac.id:7054
       - FABRIC_CA_NAME=ca.kepsek.maarif.ac.id
       - AS_LOCALHOST=false
-      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101,grpc://peer0.siswa.maarif.ac.id:7121
+      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101
       - HFC_LOGGING={"error":"console","warn":"console","info":"console"}
     ports:
       - 8801:8000
@@ -326,7 +326,7 @@ services:
       - FABRIC_CA_URL=http://ca.kesiswaan.maarif.ac.id:7054
       - FABRIC_CA_NAME=ca.kesiswaan.maarif.ac.id
       - AS_LOCALHOST=false
-      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101,grpc://peer0.siswa.maarif.ac.id:7121
+      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101
       - HFC_LOGGING={"error":"console","warn":"console","info":"console"}
     ports:
       - 8802:8000
@@ -448,7 +448,7 @@ services:
       - FABRIC_CA_URL=http://ca.stafftu.maarif.ac.id:7054
       - FABRIC_CA_NAME=ca.stafftu.maarif.ac.id
       - AS_LOCALHOST=false
-      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101,grpc://peer0.siswa.maarif.ac.id:7121
+      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101
       - HFC_LOGGING={"error":"console","warn":"console","info":"console"}
     ports:
       - 8803:8000
@@ -570,7 +570,7 @@ services:
       - FABRIC_CA_URL=http://ca.mitra.maarif.ac.id:7054
       - FABRIC_CA_NAME=ca.mitra.maarif.ac.id
       - AS_LOCALHOST=false
-      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101,grpc://peer0.siswa.maarif.ac.id:7121
+      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101
       - HFC_LOGGING={"error":"console","warn":"console","info":"console"}
     ports:
       - 8804:8000
@@ -634,128 +634,6 @@ services:
       - COUCHDB_PASSWORD=peer0Password
     ports:
       - 5160:5984
-    networks:
-      - basic
-
-  ca.siswa.maarif.ac.id:
-    container_name: ca.siswa.maarif.ac.id
-    image: hyperledger/fabric-ca:${FABRIC_CA_VERSION}
-    environment:
-      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_SERVER_CA_NAME=ca.siswa.maarif.ac.id
-      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server/crypto/ca.siswa.maarif.ac.id-cert.pem
-      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server/crypto/priv-key.pem
-      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
-    ports:
-      - 7120:7054
-    working_dir: /etc/hyperledger/fabric-ca-server
-    command: sh -c 'fabric-ca-server start -b ${SISWA_CA_ADMIN_NAME}:${SISWA_CA_ADMIN_PASSWORD} -d'
-    volumes:
-      - ../fabric-config/crypto-config/peerOrganizations/siswa.maarif.ac.id/ca/:/etc/hyperledger/fabric-ca-server/crypto
-      - ../fabric-config/fabric-ca-server-config/siswa.maarif.ac.id/fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml
-    networks:
-      - basic
-
-  cli.siswa.maarif.ac.id:
-    container_name: cli.siswa.maarif.ac.id
-    image: hyperledger/fabric-tools:${FABRIC_VERSION}
-    tty: true
-    environment:
-      - GOPATH=/opt/gopath
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
-      - CORE_PEER_ID=cli.siswa.maarif.ac.id
-      - CORE_CHAINCODE_KEEPALIVE=10
-      #
-      - CORE_PEER_LOCALMSPID=SiswaMSP
-      - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/cli/crypto/users/Admin@siswa.maarif.ac.id/msp
-      - CORE_PEER_ADDRESS=peer0.siswa.maarif.ac.id:7121
-    working_dir: /var/hyperledger/cli/
-    command: /bin/bash
-    volumes:
-      - /var/run/docker.sock:/host/var/run/docker.sock
-      - ../fabric-docker/scripts/cli:/var/hyperledger/cli/scripts/
-      - ../fabric-config/config:/var/hyperledger/cli/config/ # genesis.block and channel.tx's
-      - ../fabric-config/crypto-config/peerOrganizations/siswa.maarif.ac.id:/var/hyperledger/cli/crypto/
-      - ../fabric-config/chaincode-packages:/var/hyperledger/cli/chaincode-packages/
-      - "$CHAINCODES_BASE_DIR/./chaincodes/chaincode-ijazah/:/var/hyperledger/cli/chaincode-ijazah/"
-      - "$CHAINCODES_BASE_DIR/./chaincodes/chaincode-sertifikat/:/var/hyperledger/cli/chaincode-sertifikat/"
-    networks:
-      - basic
-
-  fablo-rest.siswa.maarif.ac.id:
-    container_name: fablo-rest.siswa.maarif.ac.id
-    image: fakhrads/fablo-rest:${FABLO_REST_VERSION}
-    environment:
-      - PORT=8000
-      - MSP_ID=SiswaMSP
-      - FABRIC_CA_URL=http://ca.siswa.maarif.ac.id:7054
-      - FABRIC_CA_NAME=ca.siswa.maarif.ac.id
-      - AS_LOCALHOST=false
-      - DISCOVERY_URLS=grpc://peer0.kepsek.maarif.ac.id:7041,grpc://peer1.kepsek.maarif.ac.id:7042,grpc://peer0.kesiswaan.maarif.ac.id:7061,grpc://peer0.stafftu.maarif.ac.id:7081,grpc://peer0.mitra.maarif.ac.id:7101,grpc://peer0.siswa.maarif.ac.id:7121
-      - HFC_LOGGING={"error":"console","warn":"console","info":"console"}
-    ports:
-      - 8805:8000
-    networks:
-      - basic
-
-  peer0.siswa.maarif.ac.id:
-    container_name: peer0.siswa.maarif.ac.id
-    image: hyperledger/fabric-peer:${FABRIC_VERSION}
-    environment:
-      - CORE_PEER_LOCALMSPID=SiswaMSP
-      - CORE_PEER_ID=peer0.siswa.maarif.ac.id
-      - CORE_PEER_ADDRESS=peer0.siswa.maarif.ac.id:7121
-      - CORE_PEER_LISTENADDRESS=peer0.siswa.maarif.ac.id:7121
-      - CORE_PEER_GOSSIP_ENDPOINT=peer0.siswa.maarif.ac.id:7121
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.siswa.maarif.ac.id:7121
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.siswa.maarif.ac.id:7121
-      - CORE_PEER_CHAINCODELISTENADDRESS=peer0.siswa.maarif.ac.id:7050
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/peer/msp
-      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:${FABRIC_CCENV_VERSION}
-      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:${FABRIC_BASEOS_VERSION}
-      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:${FABRIC_JAVAENV_VERSION}
-      #
-      - CORE_CHAINCODE_LOGGING_LEVEL=${LOGGING_LEVEL}
-      - CORE_CHAINCODE_LOGGING_SHIM=${LOGGING_LEVEL}
-      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
-      # metrics
-      - CORE_OPERATIONS_LISTENADDRESS=peer0.siswa.maarif.ac.id:9440
-      - CORE_METRICS_PROVIDER=prometheus
-      #
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_basic
-      - CORE_VM_DOCKER_ATTACHSTDOUT=true
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - GODEBUG=netdns=go
-      # CouchDB
-      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer0.siswa.maarif.ac.id:5984
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=peer0
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=peer0Password
-      # enabled gateway
-      - CORE_PEER_GATEWAY_ENABLED=true
-    working_dir: /etc/hyperledger/fabric/peer/
-    command: peer node start
-    ports:
-      - 8121:9440
-      - 7121:7121
-    volumes:
-      - /var/run/docker.sock:/host/var/run/docker.sock
-      - ../fabric-config/crypto-config/peerOrganizations/siswa.maarif.ac.id/peers/peer0.siswa.maarif.ac.id/msp:/etc/hyperledger/fabric/peer/msp
-      - ../fabric-config/crypto-config/peerOrganizations/siswa.maarif.ac.id/peers/peer0.siswa.maarif.ac.id/tls:/etc/hyperledger/fabric/peer/tls
-      - ../fabric-config/crypto-config/peerOrganizations/siswa.maarif.ac.id/users:/etc/hyperledger/fabric/peer/msp/users
-      - ../fabric-config/config:/etc/hyperledger/fabric/config
-    networks:
-      - basic
-
-  couchdb.peer0.siswa.maarif.ac.id:
-    container_name: couchdb.peer0.siswa.maarif.ac.id
-    image: couchdb:${COUCHDB_VERSION}
-    environment:
-      - COUCHDB_USER=peer0
-      - COUCHDB_PASSWORD=peer0Password
-    ports:
-      - 5180:5984
     networks:
       - basic
 

@@ -146,29 +146,6 @@ Organizations:
           - Host: peer0.mitra.maarif.ac.id
             Port: 7101
 
-    - &Siswa
-      Name: SiswaMSP
-      ID: SiswaMSP
-      MSPDir: crypto-config/peerOrganizations/siswa.maarif.ac.id/msp
-
-      Policies:
-          Readers:
-              Type: Signature
-              Rule: "OR('SiswaMSP.member')"
-          Writers:
-              Type: Signature
-              Rule: "OR('SiswaMSP.member')"
-          Admins:
-              Type: Signature
-              Rule: "OR('SiswaMSP.admin')"
-          Endorsement:
-              Type: Signature
-              Rule: "OR('SiswaMSP.member')"
-
-      AnchorPeers:
-          - Host: peer0.siswa.maarif.ac.id
-            Port: 7121
-
 ################################################################################
 #   SECTION: Application
 ################################################################################
@@ -250,7 +227,6 @@ Profiles:
                     - *Kesiswaan
                     - *Stafftu
                     - *Mitra
-                    - *Siswa
 
     # Profile used to create channeltx for ijazah #
     Ijazah:
@@ -268,14 +244,12 @@ Profiles:
                     - *KepalaSekolah
                     - *Kesiswaan
                     - *Stafftu
-                    - *Siswa
         Application:
             <<: *ApplicationDefaults
             Organizations:
                 - *KepalaSekolah
                 - *Kesiswaan
                 - *Stafftu
-                - *Siswa
 
     # Profile used to create channeltx for sertifikat #
     Sertifikat:
@@ -293,11 +267,9 @@ Profiles:
                     - *KepalaSekolah
                     - *Stafftu
                     - *Mitra
-                    - *Siswa
         Application:
             <<: *ApplicationDefaults
             Organizations:
                 - *KepalaSekolah
                 - *Stafftu
                 - *Mitra
-                - *Siswa

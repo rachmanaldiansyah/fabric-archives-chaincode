@@ -13,8 +13,7 @@
         "peer1.kepsek.maarif.ac.id",
         "peer0.kesiswaan.maarif.ac.id",
         "peer0.stafftu.maarif.ac.id",
-        "peer0.mitra.maarif.ac.id",
-        "peer0.siswa.maarif.ac.id"
+        "peer0.mitra.maarif.ac.id"
       ],
       "certificateAuthorities": [
         "ca.mitra.maarif.ac.id"
@@ -36,9 +35,6 @@
     },
     "peer0.mitra.maarif.ac.id": {
       "url": "grpc://localhost:7101"
-    },
-    "peer0.siswa.maarif.ac.id": {
-      "url": "grpc://localhost:7121"
     }
   },
   "certificateAuthorities": {

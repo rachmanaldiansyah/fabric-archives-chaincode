@@ -8,7 +8,6 @@ __getOrdererAndPeerNodes() {
       peer0.kesiswaan.maarif.ac.id
       peer0.stafftu.maarif.ac.id
       peer0.mitra.maarif.ac.id
-      peer0.siswa.maarif.ac.id
   "
 }
 
@@ -19,7 +18,6 @@ __getCASQLiteNodes() {
       ca.kesiswaan.maarif.ac.id
       ca.stafftu.maarif.ac.id
       ca.mitra.maarif.ac.id
-      ca.siswa.maarif.ac.id
   "
 }
 

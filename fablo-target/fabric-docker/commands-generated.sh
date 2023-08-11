@@ -18,9 +18,6 @@ generateArtifacts() {
   printItalics "Generating crypto material for Mitra" "U1F512"
   certsGenerate "$FABLO_NETWORK_ROOT/fabric-config" "crypto-config-mitra.yaml" "peerOrganizations/mitra.maarif.ac.id" "$FABLO_NETWORK_ROOT/fabric-config/crypto-config/"
 
-  printItalics "Generating crypto material for Siswa" "U1F512"
-  certsGenerate "$FABLO_NETWORK_ROOT/fabric-config" "crypto-config-siswa.yaml" "peerOrganizations/siswa.maarif.ac.id" "$FABLO_NETWORK_ROOT/fabric-config/crypto-config/"
-
   printItalics "Generating genesis block for group maarif" "U1F3E0"
   genesisBlockCreate "$FABLO_NETWORK_ROOT/fabric-config" "$FABLO_NETWORK_ROOT/fabric-config/config" "MaarifGenesis"
 
@@ -51,8 +48,6 @@ installChannels() {
   docker exec -i cli.kesiswaan.maarif.ac.id bash -c "source scripts/channel_fns.sh; fetchChannelAndJoin 'ijazah' 'KesiswaanMSP' 'peer0.kesiswaan.maarif.ac.id:7061' 'crypto/users/Admin@kesiswaan.maarif.ac.id/msp' 'orderer0.maarif.maarif.orderer.ac.id:7030';"
   printItalics "Joining 'ijazah' on  Stafftu/peer0" "U1F638"
   docker exec -i cli.stafftu.maarif.ac.id bash -c "source scripts/channel_fns.sh; fetchChannelAndJoin 'ijazah' 'StafftuMSP' 'peer0.stafftu.maarif.ac.id:7081' 'crypto/users/Admin@stafftu.maarif.ac.id/msp' 'orderer0.maarif.maarif.orderer.ac.id:7030';"
-  printItalics "Joining 'ijazah' on  Siswa/peer0" "U1F638"
-  docker exec -i cli.siswa.maarif.ac.id bash -c "source scripts/channel_fns.sh; fetchChannelAndJoin 'ijazah' 'SiswaMSP' 'peer0.siswa.maarif.ac.id:7121' 'crypto/users/Admin@siswa.maarif.ac.id/msp' 'orderer0.maarif.maarif.orderer.ac.id:7030';"
   printHeadline "Creating 'sertifikat' on KepalaSekolah/peer0" "U1F63B"
   docker exec -i cli.kepsek.maarif.ac.id bash -c "source scripts/channel_fns.sh; createChannelAndJoin 'sertifikat' 'KepalaSekolahMSP' 'peer0.kepsek.maarif.ac.id:7041' 'crypto/users/Admin@kepsek.maarif.ac.id/msp' 'orderer0.maarif.maarif.orderer.ac.id:7030';"
 
@@ -62,8 +57,6 @@ installChannels() {
   docker exec -i cli.stafftu.maarif.ac.id bash -c "source scripts/channel_fns.sh; fetchChannelAndJoin 'sertifikat' 'StafftuMSP' 'peer0.stafftu.maarif.ac.id:7081' 'crypto/users/Admin@stafftu.maarif.ac.id/msp' 'orderer0.maarif.maarif.orderer.ac.id:7030';"
   printItalics "Joining 'sertifikat' on  Mitra/peer0" "U1F638"
   docker exec -i cli.mitra.maarif.ac.id bash -c "source scripts/channel_fns.sh; fetchChannelAndJoin 'sertifikat' 'MitraMSP' 'peer0.mitra.maarif.ac.id:7101' 'crypto/users/Admin@mitra.maarif.ac.id/msp' 'orderer0.maarif.maarif.orderer.ac.id:7030';"
-  printItalics "Joining 'sertifikat' on  Siswa/peer0" "U1F638"
-  docker exec -i cli.siswa.maarif.ac.id bash -c "source scripts/channel_fns.sh; fetchChannelAndJoin 'sertifikat' 'SiswaMSP' 'peer0.siswa.maarif.ac.id:7121' 'crypto/users/Admin@siswa.maarif.ac.id/msp' 'orderer0.maarif.maarif.orderer.ac.id:7030';"
 }
 
 installChaincodes() {
@@ -81,11 +74,8 @@ installChaincodes() {
     printHeadline "Installing 'chaincode-ijazah' for Stafftu" "U1F60E"
     chaincodeInstall "cli.stafftu.maarif.ac.id" "peer0.stafftu.maarif.ac.id:7081" "chaincode-ijazah" "$version" ""
     chaincodeApprove "cli.stafftu.maarif.ac.id" "peer0.stafftu.maarif.ac.id:7081" "ijazah" "chaincode-ijazah" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
-    printHeadline "Installing 'chaincode-ijazah' for Siswa" "U1F60E"
-    chaincodeInstall "cli.siswa.maarif.ac.id" "peer0.siswa.maarif.ac.id:7121" "chaincode-ijazah" "$version" ""
-    chaincodeApprove "cli.siswa.maarif.ac.id" "peer0.siswa.maarif.ac.id:7121" "ijazah" "chaincode-ijazah" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
     printItalics "Committing chaincode 'chaincode-ijazah' on channel 'ijazah' as 'KepalaSekolah'" "U1F618"
-    chaincodeCommit "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id:7041" "ijazah" "chaincode-ijazah" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" "peer0.kepsek.maarif.ac.id:7041,peer0.kesiswaan.maarif.ac.id:7061,peer0.stafftu.maarif.ac.id:7081,peer0.siswa.maarif.ac.id:7121" "" ""
+    chaincodeCommit "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id:7041" "ijazah" "chaincode-ijazah" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" "peer0.kepsek.maarif.ac.id:7041,peer0.kesiswaan.maarif.ac.id:7061,peer0.stafftu.maarif.ac.id:7081" "" ""
   else
     echo "Warning! Skipping chaincode 'chaincode-ijazah' installation. Chaincode directory is empty."
     echo "Looked in dir: '$CHAINCODES_BASE_DIR/./chaincodes/chaincode-ijazah'"
@@ -104,11 +94,8 @@ installChaincodes() {
     printHeadline "Installing 'chaincode-sertifikat' for Mitra" "U1F60E"
     chaincodeInstall "cli.mitra.maarif.ac.id" "peer0.mitra.maarif.ac.id:7101" "chaincode-sertifikat" "$version" ""
     chaincodeApprove "cli.mitra.maarif.ac.id" "peer0.mitra.maarif.ac.id:7101" "sertifikat" "chaincode-sertifikat" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
-    printHeadline "Installing 'chaincode-sertifikat' for Siswa" "U1F60E"
-    chaincodeInstall "cli.siswa.maarif.ac.id" "peer0.siswa.maarif.ac.id:7121" "chaincode-sertifikat" "$version" ""
-    chaincodeApprove "cli.siswa.maarif.ac.id" "peer0.siswa.maarif.ac.id:7121" "sertifikat" "chaincode-sertifikat" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
     printItalics "Committing chaincode 'chaincode-sertifikat' on channel 'sertifikat' as 'KepalaSekolah'" "U1F618"
-    chaincodeCommit "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id:7041" "sertifikat" "chaincode-sertifikat" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" "peer0.kepsek.maarif.ac.id:7041,peer0.stafftu.maarif.ac.id:7081,peer0.mitra.maarif.ac.id:7101,peer0.siswa.maarif.ac.id:7121" "" ""
+    chaincodeCommit "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id:7041" "sertifikat" "chaincode-sertifikat" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" "peer0.kepsek.maarif.ac.id:7041,peer0.stafftu.maarif.ac.id:7081,peer0.mitra.maarif.ac.id:7101" "" ""
   else
     echo "Warning! Skipping chaincode 'chaincode-sertifikat' installation. Chaincode directory is empty."
     echo "Looked in dir: '$CHAINCODES_BASE_DIR/./chaincodes/chaincode-sertifikat'"
@@ -143,11 +130,8 @@ installChaincode() {
       printHeadline "Installing 'chaincode-ijazah' for Stafftu" "U1F60E"
       chaincodeInstall "cli.stafftu.maarif.ac.id" "peer0.stafftu.maarif.ac.id:7081" "chaincode-ijazah" "$version" ""
       chaincodeApprove "cli.stafftu.maarif.ac.id" "peer0.stafftu.maarif.ac.id:7081" "ijazah" "chaincode-ijazah" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
-      printHeadline "Installing 'chaincode-ijazah' for Siswa" "U1F60E"
-      chaincodeInstall "cli.siswa.maarif.ac.id" "peer0.siswa.maarif.ac.id:7121" "chaincode-ijazah" "$version" ""
-      chaincodeApprove "cli.siswa.maarif.ac.id" "peer0.siswa.maarif.ac.id:7121" "ijazah" "chaincode-ijazah" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
       printItalics "Committing chaincode 'chaincode-ijazah' on channel 'ijazah' as 'KepalaSekolah'" "U1F618"
-      chaincodeCommit "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id:7041" "ijazah" "chaincode-ijazah" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" "peer0.kepsek.maarif.ac.id:7041,peer0.kesiswaan.maarif.ac.id:7061,peer0.stafftu.maarif.ac.id:7081,peer0.siswa.maarif.ac.id:7121" "" ""
+      chaincodeCommit "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id:7041" "ijazah" "chaincode-ijazah" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" "peer0.kepsek.maarif.ac.id:7041,peer0.kesiswaan.maarif.ac.id:7061,peer0.stafftu.maarif.ac.id:7081" "" ""
 
     else
       echo "Warning! Skipping chaincode 'chaincode-ijazah' install. Chaincode directory is empty."
@@ -168,11 +152,8 @@ installChaincode() {
       printHeadline "Installing 'chaincode-sertifikat' for Mitra" "U1F60E"
       chaincodeInstall "cli.mitra.maarif.ac.id" "peer0.mitra.maarif.ac.id:7101" "chaincode-sertifikat" "$version" ""
       chaincodeApprove "cli.mitra.maarif.ac.id" "peer0.mitra.maarif.ac.id:7101" "sertifikat" "chaincode-sertifikat" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
-      printHeadline "Installing 'chaincode-sertifikat' for Siswa" "U1F60E"
-      chaincodeInstall "cli.siswa.maarif.ac.id" "peer0.siswa.maarif.ac.id:7121" "chaincode-sertifikat" "$version" ""
-      chaincodeApprove "cli.siswa.maarif.ac.id" "peer0.siswa.maarif.ac.id:7121" "sertifikat" "chaincode-sertifikat" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
       printItalics "Committing chaincode 'chaincode-sertifikat' on channel 'sertifikat' as 'KepalaSekolah'" "U1F618"
-      chaincodeCommit "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id:7041" "sertifikat" "chaincode-sertifikat" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" "peer0.kepsek.maarif.ac.id:7041,peer0.stafftu.maarif.ac.id:7081,peer0.mitra.maarif.ac.id:7101,peer0.siswa.maarif.ac.id:7121" "" ""
+      chaincodeCommit "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id:7041" "sertifikat" "chaincode-sertifikat" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" "peer0.kepsek.maarif.ac.id:7041,peer0.stafftu.maarif.ac.id:7081,peer0.mitra.maarif.ac.id:7101" "" ""
 
     else
       echo "Warning! Skipping chaincode 'chaincode-sertifikat' install. Chaincode directory is empty."
@@ -196,10 +177,8 @@ runDevModeChaincode() {
     chaincodeApprove "cli.kesiswaan.maarif.ac.id" "peer0.kesiswaan.maarif.ac.id:7061" "ijazah" "chaincode-ijazah" "0.0.1" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
     printHeadline "Approving 'chaincode-ijazah' for Stafftu (dev mode)" "U1F60E"
     chaincodeApprove "cli.stafftu.maarif.ac.id" "peer0.stafftu.maarif.ac.id:7081" "ijazah" "chaincode-ijazah" "0.0.1" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
-    printHeadline "Approving 'chaincode-ijazah' for Siswa (dev mode)" "U1F60E"
-    chaincodeApprove "cli.siswa.maarif.ac.id" "peer0.siswa.maarif.ac.id:7121" "ijazah" "chaincode-ijazah" "0.0.1" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
     printItalics "Committing chaincode 'chaincode-ijazah' on channel 'ijazah' as 'KepalaSekolah' (dev mode)" "U1F618"
-    chaincodeCommit "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id:7041" "ijazah" "chaincode-ijazah" "0.0.1" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" "peer0.kepsek.maarif.ac.id:7041,peer0.kesiswaan.maarif.ac.id:7061,peer0.stafftu.maarif.ac.id:7081,peer0.siswa.maarif.ac.id:7121" "" ""
+    chaincodeCommit "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id:7041" "ijazah" "chaincode-ijazah" "0.0.1" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" "peer0.kepsek.maarif.ac.id:7041,peer0.kesiswaan.maarif.ac.id:7061,peer0.stafftu.maarif.ac.id:7081" "" ""
 
   fi
   if [ "$chaincodeName" = "chaincode-sertifikat" ]; then
@@ -210,10 +189,8 @@ runDevModeChaincode() {
     chaincodeApprove "cli.stafftu.maarif.ac.id" "peer0.stafftu.maarif.ac.id:7081" "sertifikat" "chaincode-sertifikat" "0.0.1" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
     printHeadline "Approving 'chaincode-sertifikat' for Mitra (dev mode)" "U1F60E"
     chaincodeApprove "cli.mitra.maarif.ac.id" "peer0.mitra.maarif.ac.id:7101" "sertifikat" "chaincode-sertifikat" "0.0.1" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
-    printHeadline "Approving 'chaincode-sertifikat' for Siswa (dev mode)" "U1F60E"
-    chaincodeApprove "cli.siswa.maarif.ac.id" "peer0.siswa.maarif.ac.id:7121" "sertifikat" "chaincode-sertifikat" "0.0.1" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
     printItalics "Committing chaincode 'chaincode-sertifikat' on channel 'sertifikat' as 'KepalaSekolah' (dev mode)" "U1F618"
-    chaincodeCommit "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id:7041" "sertifikat" "chaincode-sertifikat" "0.0.1" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" "peer0.kepsek.maarif.ac.id:7041,peer0.stafftu.maarif.ac.id:7081,peer0.mitra.maarif.ac.id:7101,peer0.siswa.maarif.ac.id:7121" "" ""
+    chaincodeCommit "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id:7041" "sertifikat" "chaincode-sertifikat" "0.0.1" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" "peer0.kepsek.maarif.ac.id:7041,peer0.stafftu.maarif.ac.id:7081,peer0.mitra.maarif.ac.id:7101" "" ""
 
   fi
 }
@@ -245,11 +222,8 @@ upgradeChaincode() {
       printHeadline "Installing 'chaincode-ijazah' for Stafftu" "U1F60E"
       chaincodeInstall "cli.stafftu.maarif.ac.id" "peer0.stafftu.maarif.ac.id:7081" "chaincode-ijazah" "$version" ""
       chaincodeApprove "cli.stafftu.maarif.ac.id" "peer0.stafftu.maarif.ac.id:7081" "ijazah" "chaincode-ijazah" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
-      printHeadline "Installing 'chaincode-ijazah' for Siswa" "U1F60E"
-      chaincodeInstall "cli.siswa.maarif.ac.id" "peer0.siswa.maarif.ac.id:7121" "chaincode-ijazah" "$version" ""
-      chaincodeApprove "cli.siswa.maarif.ac.id" "peer0.siswa.maarif.ac.id:7121" "ijazah" "chaincode-ijazah" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
       printItalics "Committing chaincode 'chaincode-ijazah' on channel 'ijazah' as 'KepalaSekolah'" "U1F618"
-      chaincodeCommit "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id:7041" "ijazah" "chaincode-ijazah" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" "peer0.kepsek.maarif.ac.id:7041,peer0.kesiswaan.maarif.ac.id:7061,peer0.stafftu.maarif.ac.id:7081,peer0.siswa.maarif.ac.id:7121" "" ""
+      chaincodeCommit "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id:7041" "ijazah" "chaincode-ijazah" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" "peer0.kepsek.maarif.ac.id:7041,peer0.kesiswaan.maarif.ac.id:7061,peer0.stafftu.maarif.ac.id:7081" "" ""
 
     else
       echo "Warning! Skipping chaincode 'chaincode-ijazah' upgrade. Chaincode directory is empty."
@@ -270,11 +244,8 @@ upgradeChaincode() {
       printHeadline "Installing 'chaincode-sertifikat' for Mitra" "U1F60E"
       chaincodeInstall "cli.mitra.maarif.ac.id" "peer0.mitra.maarif.ac.id:7101" "chaincode-sertifikat" "$version" ""
       chaincodeApprove "cli.mitra.maarif.ac.id" "peer0.mitra.maarif.ac.id:7101" "sertifikat" "chaincode-sertifikat" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
-      printHeadline "Installing 'chaincode-sertifikat' for Siswa" "U1F60E"
-      chaincodeInstall "cli.siswa.maarif.ac.id" "peer0.siswa.maarif.ac.id:7121" "chaincode-sertifikat" "$version" ""
-      chaincodeApprove "cli.siswa.maarif.ac.id" "peer0.siswa.maarif.ac.id:7121" "sertifikat" "chaincode-sertifikat" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" ""
       printItalics "Committing chaincode 'chaincode-sertifikat' on channel 'sertifikat' as 'KepalaSekolah'" "U1F618"
-      chaincodeCommit "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id:7041" "sertifikat" "chaincode-sertifikat" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" "peer0.kepsek.maarif.ac.id:7041,peer0.stafftu.maarif.ac.id:7081,peer0.mitra.maarif.ac.id:7101,peer0.siswa.maarif.ac.id:7121" "" ""
+      chaincodeCommit "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id:7041" "sertifikat" "chaincode-sertifikat" "$version" "orderer0.maarif.maarif.orderer.ac.id:7030" "" "false" "" "peer0.kepsek.maarif.ac.id:7041,peer0.stafftu.maarif.ac.id:7081,peer0.mitra.maarif.ac.id:7101" "" ""
 
     else
       echo "Warning! Skipping chaincode 'chaincode-sertifikat' upgrade. Chaincode directory is empty."
@@ -288,31 +259,25 @@ notifyOrgsAboutChannels() {
   createNewChannelUpdateTx "ijazah" "KepalaSekolahMSP" "Ijazah" "$FABLO_NETWORK_ROOT/fabric-config" "$FABLO_NETWORK_ROOT/fabric-config/config"
   createNewChannelUpdateTx "ijazah" "KesiswaanMSP" "Ijazah" "$FABLO_NETWORK_ROOT/fabric-config" "$FABLO_NETWORK_ROOT/fabric-config/config"
   createNewChannelUpdateTx "ijazah" "StafftuMSP" "Ijazah" "$FABLO_NETWORK_ROOT/fabric-config" "$FABLO_NETWORK_ROOT/fabric-config/config"
-  createNewChannelUpdateTx "ijazah" "SiswaMSP" "Ijazah" "$FABLO_NETWORK_ROOT/fabric-config" "$FABLO_NETWORK_ROOT/fabric-config/config"
   createNewChannelUpdateTx "sertifikat" "KepalaSekolahMSP" "Sertifikat" "$FABLO_NETWORK_ROOT/fabric-config" "$FABLO_NETWORK_ROOT/fabric-config/config"
   createNewChannelUpdateTx "sertifikat" "StafftuMSP" "Sertifikat" "$FABLO_NETWORK_ROOT/fabric-config" "$FABLO_NETWORK_ROOT/fabric-config/config"
   createNewChannelUpdateTx "sertifikat" "MitraMSP" "Sertifikat" "$FABLO_NETWORK_ROOT/fabric-config" "$FABLO_NETWORK_ROOT/fabric-config/config"
-  createNewChannelUpdateTx "sertifikat" "SiswaMSP" "Sertifikat" "$FABLO_NETWORK_ROOT/fabric-config" "$FABLO_NETWORK_ROOT/fabric-config/config"
 
   printHeadline "Notyfing orgs about channels" "U1F4E2"
   notifyOrgAboutNewChannel "ijazah" "KepalaSekolahMSP" "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id" "orderer0.maarif.maarif.orderer.ac.id:7030"
   notifyOrgAboutNewChannel "ijazah" "KesiswaanMSP" "cli.kesiswaan.maarif.ac.id" "peer0.kesiswaan.maarif.ac.id" "orderer0.maarif.maarif.orderer.ac.id:7030"
   notifyOrgAboutNewChannel "ijazah" "StafftuMSP" "cli.stafftu.maarif.ac.id" "peer0.stafftu.maarif.ac.id" "orderer0.maarif.maarif.orderer.ac.id:7030"
-  notifyOrgAboutNewChannel "ijazah" "SiswaMSP" "cli.siswa.maarif.ac.id" "peer0.siswa.maarif.ac.id" "orderer0.maarif.maarif.orderer.ac.id:7030"
   notifyOrgAboutNewChannel "sertifikat" "KepalaSekolahMSP" "cli.kepsek.maarif.ac.id" "peer0.kepsek.maarif.ac.id" "orderer0.maarif.maarif.orderer.ac.id:7030"
   notifyOrgAboutNewChannel "sertifikat" "StafftuMSP" "cli.stafftu.maarif.ac.id" "peer0.stafftu.maarif.ac.id" "orderer0.maarif.maarif.orderer.ac.id:7030"
   notifyOrgAboutNewChannel "sertifikat" "MitraMSP" "cli.mitra.maarif.ac.id" "peer0.mitra.maarif.ac.id" "orderer0.maarif.maarif.orderer.ac.id:7030"
-  notifyOrgAboutNewChannel "sertifikat" "SiswaMSP" "cli.siswa.maarif.ac.id" "peer0.siswa.maarif.ac.id" "orderer0.maarif.maarif.orderer.ac.id:7030"
 
   printHeadline "Deleting new channel config blocks" "U1F52A"
   deleteNewChannelUpdateTx "ijazah" "KepalaSekolahMSP" "cli.kepsek.maarif.ac.id"
   deleteNewChannelUpdateTx "ijazah" "KesiswaanMSP" "cli.kesiswaan.maarif.ac.id"
   deleteNewChannelUpdateTx "ijazah" "StafftuMSP" "cli.stafftu.maarif.ac.id"
-  deleteNewChannelUpdateTx "ijazah" "SiswaMSP" "cli.siswa.maarif.ac.id"
   deleteNewChannelUpdateTx "sertifikat" "KepalaSekolahMSP" "cli.kepsek.maarif.ac.id"
   deleteNewChannelUpdateTx "sertifikat" "StafftuMSP" "cli.stafftu.maarif.ac.id"
   deleteNewChannelUpdateTx "sertifikat" "MitraMSP" "cli.mitra.maarif.ac.id"
-  deleteNewChannelUpdateTx "sertifikat" "SiswaMSP" "cli.siswa.maarif.ac.id"
 }
 
 printStartSuccessInfo() {
@@ -362,14 +327,6 @@ networkDown() {
     echo "Removing image $image..."
     docker rmi "$image" || echo "docker rmi of $image failed. Check if all fabric dockers properly was deleted"
   done
-  for container in $(docker ps -a | grep "dev-peer0.siswa.maarif.ac.id-chaincode-ijazah" | awk '{print $1}'); do
-    echo "Removing container $container..."
-    docker rm -f "$container" || echo "docker rm of $container failed. Check if all fabric dockers properly was deleted"
-  done
-  for image in $(docker images "dev-peer0.siswa.maarif.ac.id-chaincode-ijazah*" -q); do
-    echo "Removing image $image..."
-    docker rmi "$image" || echo "docker rmi of $image failed. Check if all fabric dockers properly was deleted"
-  done
   for container in $(docker ps -a | grep "dev-peer0.kepsek.maarif.ac.id-chaincode-sertifikat" | awk '{print $1}'); do
     echo "Removing container $container..."
     docker rm -f "$container" || echo "docker rm of $container failed. Check if all fabric dockers properly was deleted"
@@ -399,14 +356,6 @@ networkDown() {
     docker rm -f "$container" || echo "docker rm of $container failed. Check if all fabric dockers properly was deleted"
   done
   for image in $(docker images "dev-peer0.mitra.maarif.ac.id-chaincode-sertifikat*" -q); do
-    echo "Removing image $image..."
-    docker rmi "$image" || echo "docker rmi of $image failed. Check if all fabric dockers properly was deleted"
-  done
-  for container in $(docker ps -a | grep "dev-peer0.siswa.maarif.ac.id-chaincode-sertifikat" | awk '{print $1}'); do
-    echo "Removing container $container..."
-    docker rm -f "$container" || echo "docker rm of $container failed. Check if all fabric dockers properly was deleted"
-  done
-  for image in $(docker images "dev-peer0.siswa.maarif.ac.id-chaincode-sertifikat*" -q); do
     echo "Removing image $image..."
     docker rmi "$image" || echo "docker rmi of $image failed. Check if all fabric dockers properly was deleted"
   done
