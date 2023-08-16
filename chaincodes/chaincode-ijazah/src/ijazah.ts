@@ -31,8 +31,17 @@ export class Ijazah {
     public ArsipIjazah: string;
 
     @Property()
+    public TanggalArsip: string;
+
+    @Property()
     public KonfirmasiKepsek: string;
 
     @Property()
+    public TanggalKonfirmasiKepsek: string;
+
+    @Property()
     public KonfirmasiKesiswaan: string;
+
+    @Property()
+    public TanggalKonfirmasiKesiswaan: string;
 }

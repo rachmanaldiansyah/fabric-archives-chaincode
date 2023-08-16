@@ -30,8 +30,11 @@ export class PengarsipanIjazah extends Contract {
     nama_orangtua: string,
     prodi: string,
     arsip_ijazah: string,
+    createdAt: string,
     konfirmasi_kepsek: string,
-    konfirmasi_kesiswaan: string
+    konfirmasi_kepsekUpdatedAt: string,
+    konfirmasi_kesiswaan: string,
+    konfirmasi_kesiswaanUpdatedAt: string,
   ): Promise<String> {
     const exists = await this.AssetExists(ctx, no_ijazah);
     if (exists) {
@@ -47,8 +50,11 @@ export class PengarsipanIjazah extends Contract {
       NamaOrangtua: nama_orangtua,
       Prodi: prodi,
       ArsipIjazah: arsip_ijazah,
+      TanggalArsip: createdAt,
       KonfirmasiKepsek: konfirmasi_kepsek,
+      TanggalKonfirmasiKepsek: konfirmasi_kepsekUpdatedAt,
       KonfirmasiKesiswaan: konfirmasi_kesiswaan,
+      TanggalKonfirmasiKesiswaan: konfirmasi_kesiswaanUpdatedAt,
     };
 
     // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
@@ -84,8 +90,11 @@ export class PengarsipanIjazah extends Contract {
     nama_orangtua: string,
     prodi: string,
     arsip_ijazah: string,
+    createdAt: string,
     konfirmasi_kepsek: string,
-    konfirmasi_kesiswaan: string
+    konfirmasi_kepsekUpdatedAt: string,
+    konfirmasi_kesiswaan: string,
+    konfirmasi_kesiswaanUpdatedAt: string,
   ): Promise<String> {
     const exists = await this.AssetExists(ctx, no_ijazah);
     if (!exists) {
@@ -102,8 +111,11 @@ export class PengarsipanIjazah extends Contract {
       NamaOrangtua: nama_orangtua,
       Prodi: prodi,
       ArsipIjazah: arsip_ijazah,
+      TanggalArsip: createdAt,
       KonfirmasiKepsek: konfirmasi_kepsek,
+      TanggalKonfirmasiKepsek: konfirmasi_kepsekUpdatedAt,
       KonfirmasiKesiswaan: konfirmasi_kesiswaan,
+      TanggalKonfirmasiKesiswaan: konfirmasi_kesiswaanUpdatedAt,
     };
 
     // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
