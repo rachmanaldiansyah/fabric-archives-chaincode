@@ -38,4 +38,7 @@ export class Sertifikat {
 
     @Property()
     public TanggalKonfirmasiMitra: string;
+
+    @Property()
+    public TanggalUpload: string;
 }

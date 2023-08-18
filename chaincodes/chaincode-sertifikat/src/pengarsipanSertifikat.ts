@@ -32,7 +32,8 @@ export class PengarsipanSertifikat extends Contract {
     konfirmasi_kepsek: string,
     konfirmasi_kepsekUpdatedAt: string,
     konfirmasi_mitra: string,
-    konfirmasi_mitraUpdatedAt: string
+    konfirmasi_mitraUpdatedAt: string,
+    konfirmasi_uploadToBlockchain: string
   ): Promise<String> {
     const exists = await this.AssetExists(ctx, no_sertifikat);
     if (exists) {
@@ -51,6 +52,7 @@ export class PengarsipanSertifikat extends Contract {
       TanggalKonfirmasiKepsek: konfirmasi_kepsekUpdatedAt,
       KonfirmasiMitra: konfirmasi_mitra,
       TanggalKonfirmasiMitra: konfirmasi_mitraUpdatedAt,
+      TanggalUpload: konfirmasi_uploadToBlockchain
     };
 
     // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
@@ -89,7 +91,8 @@ export class PengarsipanSertifikat extends Contract {
     konfirmasi_kepsek: string,
     konfirmasi_kepsekUpdatedAt: string,
     konfirmasi_mitra: string,
-    konfirmasi_mitraUpdatedAt: string
+    konfirmasi_mitraUpdatedAt: string,
+    konfirmasi_uploadToBlockchain: string
   ): Promise<String> {
     const exists = await this.AssetExists(ctx, no_sertifikat);
     if (!exists) {
@@ -109,6 +112,7 @@ export class PengarsipanSertifikat extends Contract {
       TanggalKonfirmasiKepsek: konfirmasi_kepsekUpdatedAt,
       KonfirmasiMitra: konfirmasi_mitra,
       TanggalKonfirmasiMitra: konfirmasi_mitraUpdatedAt,
+      TanggalUpload: konfirmasi_uploadToBlockchain,
     };
 
     // we insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'

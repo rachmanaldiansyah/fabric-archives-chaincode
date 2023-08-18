@@ -44,4 +44,7 @@ export class Ijazah {
 
     @Property()
     public TanggalKonfirmasiKesiswaan: string;
+
+    @Property()
+    public TanggalUpload: string
 }
